@@ -10,14 +10,25 @@ var xsum, xxsum, ysum, yysum, xysum;
 var periodprev, aprev, bprev;
 var isDone;
 var tempo;
-let swimBpm = 80;
-var minBpm = 50;
-var maxBpm = 220;
+let swimBpm = 40;
+var minBpm = 20;
+var maxBpm = 120;
 var scaledBpm;
 let bg;
-let waveVol = -20;
+let waveVol = -10;
+let synthVol = -20;
 let swimDistance = 0;
 let swimHeight = 0;
+
+var bassLine = [
+	'A1','A1','A1','A1','A1','A1','A1','C2',
+	'C2','C2','C2','C2','C2','C2','C2','F#2',
+	'F#2','F#2','F#2','F#2','F#2','F#2','F#2','F#2',
+	'D2','D2','D2','D2','D2','D2','D2','D2'
+	];
+var highLine = ['F#5', 'G5', 'D5'];
+var lowLine = ['D4', 'D4', 'D4', null,'D4', 'D4', 'D4', null];
+
 
 function setup() {
 
@@ -58,7 +69,7 @@ const waveSample = new Tone.Player({
 waveSample.volume.value = waveVol;
 
 
-////
+////2
 
 // get the user input via key, and set values for the move object
 
@@ -122,11 +133,11 @@ function keyPressed() {
 
 // automatically reduce tempo over time if no breath 
 function decayTempo() {
-	if (swimBpm >= 60) {
+	if (swimBpm >= 30) {
 		swimBpm -= 10;
 	}
 	else {
-		swimBpm = 50;
+		swimBpm = 20;
 	}
 	Tone.Transport.bpm.rampTo(swimBpm, 1);
 	
@@ -181,6 +192,20 @@ Tone.Transport.scheduleRepeat(time => {
 	drumSampler.triggerAttack("A1").triggerRelease(time + 2);
 }, "2n");
 
+const bassSynth = new Tone.Synth().toDestination();
+const bassSeq = new Tone.Sequence((time, note) => {
+	bassSynth.triggerAttackRelease(note, "8n", time);
+}, bassLine).start(0);
+
+const highSynth = new Tone.Synth().toDestination();
+const highSeq = new Tone.Sequence((time, note) => {
+	highSynth.triggerAttackRelease(note, "4n", time);
+}, highLine).start(0);
+
+const lowSynth = new Tone.Synth().toDestination();
+const lowSeq = new Tone.Sequence((time, note) => {
+	lowSynth.triggerAttackRelease(note, "16n", time);
+}, lowLine).start(0);
 
 function startSwim() {
 	console.log("clicked");
@@ -228,13 +253,13 @@ function countBeat(currTime) {
 	
 	tempo = 60000 * x / y;
 
-	if (tempo <= 50 || isNaN(tempo)) {
-		tempo = 50;
-		swimBpm = 50;
+	if (tempo <= 20 || isNaN(tempo)) {
+		tempo = 20;
+		swimBpm = 20;
 	}
-	else if (tempo >= 220) {
-		tempo = 220;
-		swimBpm = 220;
+	else if (tempo >= 120) {
+		tempo = 120;
+		swimBpm = 120;
 	}
 	else {
 		swimBpm = tempo;
