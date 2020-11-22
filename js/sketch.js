@@ -10,21 +10,28 @@ var xsum, xxsum, ysum, yysum, xysum;
 var periodprev, aprev, bprev;
 var isDone;
 var tempo;
-let swimBpm = 50;
+let swimBpm = 80;
 var minBpm = 50;
 var maxBpm = 220;
 var scaledBpm;
+let bg;
+let waveVol = -20;
+let swimDistance = 0;
+let swimHeight = 0;
 
 function setup() {
 
+	// var bgColor = color(255, 255, 255);
+	// background(bgColor);
+
+	bg = loadImage('img/waves.png');
+	
 	createCanvas(w, h);
-	var bgColor = color(255, 255, 255);
-	background(bgColor);
 
 }
 
 function draw() {
-
+	background(bg);
 
 
 	// breath overlay gradient
@@ -36,15 +43,27 @@ function draw() {
 
 	fill(overlayC);
 	noStroke();
-	ellipse(240, 240, 80, 80);
+	rect(0, 0, w, h);
 
 	
 }
 
+// wave synth
+
+const waveSample = new Tone.Player({
+	"url" : "samples/tremendously-thick-layer.wav",
+	"autostart" : true,
+	"loop" : true
+}).toDestination();
+waveSample.volume.value = waveVol;
+
+
+////
+
 // get the user input via key, and set values for the move object
 
 function keyPressed() {
-	
+
 	let keyIndex = -1;
 	let move = [];
 	if (key >= 'a' && key <= 'z') {
@@ -58,6 +77,10 @@ function keyPressed() {
 				"side":"left",
 				"type":"stroke"
 			};
+			
+			var now = Tone.now();
+
+			
         }
         else if (key === 'q') {
 			doBeat();
@@ -71,6 +94,8 @@ function keyPressed() {
 				"side":"right",
 				"type":"stroke"
 			};
+			rightSeq.stop();
+			rightSeq.start();
         }
         else if (key === 'p') {
 			doBeat();
@@ -108,16 +133,59 @@ function decayTempo() {
 }
 ////
 
+//automatically reduce distance & height over time if no stroke
+function decayDistance() {
+	if (swimDistance >= 0) {
+		swimDistance -= 1;
+	}
+	else {
+		swimDistance = 0;
+	}	
+}
+
+function decayHeight() {
+	if (swimHeight >= -10) {
+		swimHeight -= 1;
+
+	}
+	else {
+		swimHeight = 0;
+	}
+}
+
 // heartbeat synth setup & related functions
 
 initTempo();
 
-const osc = new Tone.Oscillator().toDestination();
+// const drumSample = new Tone.Player("samples/lotabla.wav").toDestination();
+// drumSample.volume.value = -10;
+// // drumSample.autostart = true;
+// Tone.Transport.bpm.value = swimBpm;
+// Tone.Transport.scheduleRepeat(time => {
+// 	drumSample.start(time).stop(time + 2);
+// }, "1n");
+
+const drumSampler = new Tone.Sampler(
+	{
+	  A1: "samples/lotabla.wav"
+	},
+	{
+	  onload: () => {
+		document.querySelector("button").removeAttribute("disabled");
+	  }
+	}
+  ).toDestination();
+drumSampler.volume.value = -10;
 Tone.Transport.bpm.value = swimBpm;
 Tone.Transport.scheduleRepeat(time => {
-	osc.start(time).stop(time + 0.1);
-}, "4n");
-Tone.Transport.start();
+	drumSampler.triggerAttack("A1").triggerRelease(time + 2);
+}, "2n");
+
+
+function startSwim() {
+	console.log("clicked");
+	Tone.Transport.start();
+}
 
 function initTempo() {
 
