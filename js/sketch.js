@@ -11,18 +11,33 @@ var periodprev, aprev, bprev;
 var isDone;
 var tempo;
 let swimBpm = 50;
+var minBpm = 50;
+var maxBpm = 220;
+var scaledBpm;
 
 function setup() {
 
 	createCanvas(w, h);
-	console.log("setup");
+	var bgColor = color(255, 255, 255);
+	background(bgColor);
 
 }
 
 function draw() {
 
-    var bgColor = color(201, 244, 255);
-	background(bgColor);
+
+
+	// breath overlay gradient
+	from = color(255, 140, 140, 0.5 * 255);
+	to = color(89, 242, 255, 0.5 * 255);
+	scaledBpm = ((swimBpm - minBpm) / (maxBpm - minBpm));
+	
+	overlayC = lerpColor(from, to, scaledBpm.toFixed(2));
+
+	fill(overlayC);
+	noStroke();
+	ellipse(240, 240, 80, 80);
+
 	
 }
 
@@ -82,7 +97,6 @@ function keyPressed() {
 
 // automatically reduce tempo over time if no breath 
 function decayTempo() {
-	console.log(swimBpm);
 	if (swimBpm >= 60) {
 		swimBpm -= 10;
 	}
