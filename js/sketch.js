@@ -10,35 +10,43 @@ var xsum, xxsum, ysum, yysum, xysum;
 var periodprev, aprev, bprev;
 var isDone;
 var tempo;
-let swimBpm = 40;
+let swimBpm = 80;
 var minBpm = 20;
 var maxBpm = 120;
 var scaledBpm;
 let bg;
-let waveVol = -10;
-let synthVol = -20;
+let waveVol = -20;
+let harmonicVol = -25;
+let synthVol = -5;
+let chordVol = -20;
+let drumVol = -10;
 let swimDistance = 0;
 let swimHeight = 0;
 
 var bassLine = [
-	'A1','A1','A1','A1','A1','A1','A1','C2',
-	'C2','C2','C2','C2','C2','C2','C2','F#2',
-	'F#2','F#2','F#2','F#2','F#2','F#2','F#2','F#2',
-	'D2','D2','D2','D2','D2','D2','D2','D2'
+	'D#2','D#2','D#2','D#2','D#2','D#2','D2','D2',
+	'C2','C2','C2','C2','C2','C2','A#2','C3',
+	'F2','F2','F2','F2','F2','F2','C2','C2',
+	'E2','E2','E2','E2','E2','E2','E2','E2',
 	];
+
+var chordA = [
+	'C5', 'D#5', 'G5'
+]
+var chordB = [
+	'C5', 'F5', 'A5'
+]
+var chordC = [
+	'C5', 'E5', 'G5'
+]
+var chordProgression = [
+	chordA, chordA, chordB, chordC
+]
 var highLine = ['F#5', 'G5', 'D5'];
 var lowLine = ['D4', 'D4', 'D4', null,'D4', 'D4', 'D4', null];
 
 
 function setup() {
-
-	// var bgColor = color(255, 255, 255);
-	// background(bgColor);
-
-	bg = loadImage('img/waves.png');
-	
-	createCanvas(w, h);
-
 }
 
 function draw() {
@@ -68,8 +76,15 @@ const waveSample = new Tone.Player({
 }).toDestination();
 waveSample.volume.value = waveVol;
 
+const harmonicSample = new Tone.Player({
+	"url" : "samples/harmonic-loop-low.wav",
+	"autostart" : true,
+	"loop" : true
+}).toDestination();
+harmonicSample.volume.value = harmonicVol;
 
-////2
+
+////
 
 // get the user input via key, and set values for the move object
 
@@ -139,7 +154,7 @@ function decayTempo() {
 	else {
 		swimBpm = 20;
 	}
-	Tone.Transport.bpm.rampTo(swimBpm, 1);
+	Tone.Transport.bpm.rampTo(swimBpm, '1m');
 	
 }
 ////
@@ -164,48 +179,43 @@ function decayHeight() {
 	}
 }
 
-// heartbeat synth setup & related functions
+// synth setup & related functions
 
 initTempo();
 
-// const drumSample = new Tone.Player("samples/lotabla.wav").toDestination();
-// drumSample.volume.value = -10;
-// // drumSample.autostart = true;
-// Tone.Transport.bpm.value = swimBpm;
-// Tone.Transport.scheduleRepeat(time => {
-// 	drumSample.start(time).stop(time + 2);
-// }, "1n");
-
-const drumSampler = new Tone.Sampler(
-	{
-	  A1: "samples/lotabla.wav"
-	},
-	{
-	  onload: () => {
-		document.querySelector("button").removeAttribute("disabled");
-	  }
-	}
-  ).toDestination();
-drumSampler.volume.value = -10;
 Tone.Transport.bpm.value = swimBpm;
-Tone.Transport.scheduleRepeat(time => {
-	drumSampler.triggerAttack("A1").triggerRelease(time + 2);
-}, "2n");
+Tone.Transport.timeSignature = 4;
+
+// const drumSampler = new Tone.Sampler(
+// 	{
+// 	  A1: "samples/lotabla.wav"
+// 	},
+// 	{
+// 	  onload: () => {
+// 		document.querySelector("button").removeAttribute("disabled");
+// 	  }
+// 	}
+//   ).toDestination();
+// drumSampler.volume.value = drumVol;
+// Tone.Transport.scheduleRepeat(time => {
+// 	drumSampler.triggerAttack("A1").triggerRelease(time + "1m");
+// }, "1m");
 
 const bassSynth = new Tone.Synth().toDestination();
+bassSynth.volume.value = synthVol;
 const bassSeq = new Tone.Sequence((time, note) => {
+	console.log("bass: " + time)
 	bassSynth.triggerAttackRelease(note, "8n", time);
 }, bassLine).start(0);
 
-const highSynth = new Tone.Synth().toDestination();
-const highSeq = new Tone.Sequence((time, note) => {
-	highSynth.triggerAttackRelease(note, "4n", time);
-}, highLine).start(0);
-
-const lowSynth = new Tone.Synth().toDestination();
-const lowSeq = new Tone.Sequence((time, note) => {
-	lowSynth.triggerAttackRelease(note, "16n", time);
-}, lowLine).start(0);
+const chordSynth = new Tone.PolySynth().toDestination();
+chordSynth.volume.value = chordVol;
+const chordSeq = new Tone.Loop((time) => {
+	console.log("chords: "  + time);
+	chordSynth.triggerAttackRelease(chordA, "2m");
+	chordSynth.triggerAttackRelease(chordB, "1m", "+2m");
+    chordSynth.triggerAttackRelease(chordC, "1m", "+3m");
+}, "4m").start(0);
 
 function startSwim() {
 	console.log("clicked");
@@ -265,10 +275,9 @@ function countBeat(currTime) {
 		swimBpm = tempo;
 	}
 
-	Tone.Transport.bpm.rampTo(swimBpm, 1);
+	Tone.Transport.bpm.rampTo(swimBpm, '1m');
 
 }
-
 
 function doneBeat() {
 	isDone = true;
