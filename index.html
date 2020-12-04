@@ -1,389 +1,423 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>swimmer demo</title>
     <script src="js/libraries/p5.js"></script>
-	<script src="js/libraries/p5.dom.js"></script>
-	<!-- <script src="js/libraries/p5.sound.js"></script> -->
+    <script src="js/libraries/p5.dom.js"></script>
+    <!-- <script src="js/libraries/p5.sound.js"></script> -->
     <script src="js/libraries/Tone.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@tonaljs/tonal/browser/tonal.min.js"></script>
     <script src="js/utils/theoryHelper.js"></script>
     <script src="https://aframe.io/releases/1.0.4/aframe.min.js"></script>
     <script src="https://cdn.jsdelivr.net/gh/donmccurdy/aframe-extras@v6.1.1/dist/aframe-extras.min.js"></script>
+    <script src="js/newOcean.js"></script>
     <script src="js/sketch.js"></script>
-    <link rel="stylesheet" href="styles.css">
-    
-</head>
-<body>
-
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
     <a-scene vr-mode-ui="enabled: false">
-        <a-assets>
-            <img id="key" src="img/key.png">
-            <img id="space" src="img/space-bar.png">
-        </a-assets>
+      <a-assets>
+        <img id="key" src="img/key.png" />
+        <img id="space" src="img/space-bar.png" />
+      </a-assets>
 
-        <!-- environment -->
-        <!-- <a-sky></a-sky> -->
-    <a-entity id="env" position="0 0 0" env-controls>
-        <a-sky id="sky"  color="#6EBAA7"></a-sky>
+      <!-- environment -->
+      <!-- <a-sky></a-sky> -->
+      <a-entity id="env" position="0 0 0" env-controls>
+        <a-sky id="sky" color="#6EBAA7"></a-sky>
 
-        <a-ocean id="waves" color="#92E2E2" width="100" depth="200" speed="2" density="200"></a-ocean>
-        
+        <!-- <a-ocean
+          id="waves"
+          color="#92E2E2"
+          width="100"
+          depth="200"
+          speed="2"
+          density="200"
+        ></a-ocean> -->
+
+        <a-entity
+          id="waves"
+          new-ocean="width: 100; depth: 200; density:200; speed: 2; color:#92E2E2 "
+          rotation="-90 0 0"
+        ></a-entity>
 
         <!-- <a-light type="ambient" color="#ccc"></a-light>
         <a-light color="#ddf" distance="100" intensity="0.4" type="point"></a-light>
         <a-light color="#ddf" position="3 10 -10" distance="50" intensity="0.4" type="point"></a-light> -->
 
-        <a-entity id="camera" camera="" position="0 1.6 90" 
-        swim-controls look-controls>
-            <a-entity id="titleCard" position="0 0 0" visible="true">
-                <a-entity 
-                text="
+        <a-entity
+          id="camera"
+          camera=""
+          position="0 1.6 90"
+          swim-controls
+          look-controls
+        >
+          <a-entity id="titleCard" position="0 0 0" visible="true">
+            <a-entity
+              text="
                     value: tap-a-lap-splash;
                     color: #F2FD00;
                     font: exo2bold;
                     align: center;
                     font: roboto;
                     anchor: center;"
-                    scale="2 2 2"
-                    position="0 .265 -0.5"></a-entity>
-                <a-entity 
-                text="
+              scale="2 2 2"
+              position="0 .265 -0.5"
+            ></a-entity>
+            <a-entity
+              text="
                     value: a rhythmic meditation for swimmers and the people who love them;
                     color: white;
                     align: center;
                     font: roboto;
                     wrapCount: 100;
                     anchor: center;"
-                    scale="1 1 1"
-                    position="0 .2 -0.5"></a-entity>
-                   
-                    <a-entity id="spaceKey"   
-                    geometry="
+              scale="1 1 1"
+              position="0 .2 -0.5"
+            ></a-entity>
+
+            <a-entity
+              id="spaceKey"
+              geometry="
                         primitive: plane; 
                         width: .6;
                         height: .075;
                         
-                        "  
-                        scale=".6 .6 .6"
-                        material="
+                        "
+              scale=".6 .6 .6"
+              material="
                             src: #space;
                             transparent: false;
                             alphaTest: .5;
                             "
-                        position="0 .1 -.5"
-                        
-                >   
-
-                    <a-entity id="space" text="
+              position="0 .1 -.5"
+            >
+              <a-entity
+                id="space"
+                text="
                             value: PRESS SPACEBAR TO BEGIN;
                             align: center;
                             anchor: center;
                             
                             font: roboto"
-                            scale=".75 .75 .75"
-                        position="0 0 0">
-                    </a-entity>
-
-                </a-entity>
+                scale=".75 .75 .75"
+                position="0 0 0"
+              >
+              </a-entity>
             </a-entity>
-        
-            <a-entity id="guide" position="0 0 0" visible="false">
-                <a-entity 
-                text="
+          </a-entity>
+
+          <a-entity id="guide" position="0 0 0" visible="false">
+            <a-entity
+              text="
                     value: PRESS T TO TOGGLE GUIDE;
                     color: white;
                     align: center;
                     font: roboto;
                     anchor: center;"
-                    scale=".5 .5 .5"
-                    position="0 .3 -0.5"></a-entity>
-                <a-entity id="leftControls" position="-.5 0 0">
-                    <a-entity id="qKey"   
-                        geometry="
+              scale=".5 .5 .5"
+              position="0 .3 -0.5"
+            ></a-entity>
+            <a-entity id="leftControls" position="-.5 0 0">
+              <a-entity
+                id="qKey"
+                geometry="
                             primitive: plane; 
                             width: .075;
                             height: .075;
-                            "  
-                            material="
+                            "
+                material="
                                 src: #key;
                                 transparent: false;
                                 alphaTest: .5;
                                 "
-                            position="0 0 -.5"
-                            
-                    >   
-                        <a-entity id="qGuide" text="
+                position="0 0 -.5"
+              >
+                <a-entity
+                  id="qGuide"
+                  text="
                                 value: left breath;
                                 align: left;
                                 anchor:  left;
                                 opacity: 0;
                                 color: #F2FD00;
                                 font: exo2bold"
-                            position="-0.036 .08 0">
-                        </a-entity>
-                        <a-entity id="letterQ" text="
+                  position="-0.036 .08 0"
+                >
+                </a-entity>
+                <a-entity
+                  id="letterQ"
+                  text="
                                 value: Q;
                                 align: center;
                                 anchor: center;
                                 font: roboto"
-                            position="0 0 0">
-                        </a-entity>
-                        <a-entity 
-                            geometry="
+                  position="0 0 0"
+                >
+                </a-entity>
+                <a-entity
+                  geometry="
                                 primitive: plane; 
                                 width: .068;
-                                height: .068;"  
-                                material="
+                                height: .068;"
+                  material="
                                     color: #81B4B7;
                                     opacity: .5;"
-                                position="0 0 -.0001"
-                        ></a-entity>
-                    </a-entity>
-                    <a-entity id="dKey"   
-                    geometry="
+                  position="0 0 -.0001"
+                ></a-entity>
+              </a-entity>
+              <a-entity
+                id="dKey"
+                geometry="
                         primitive: plane; 
                         width: .075;
                         height: .075;
-                        "  
-                        material="
+                        "
+                material="
                             src: #key;
                             transparent: false;
                             alphaTest: .5;
                             "
-                        position=".2 -.08 -.5"
-                        
-                >
-                    <a-entity id="dGuide" text="
+                position=".2 -.08 -.5"
+              >
+                <a-entity
+                  id="dGuide"
+                  text="
                         value: left stroke;
                         align: left;
                         anchor:  left;
                         opacity: 0;
                         color: #F2FD00;
                         font: exo2bold"
-                        position="-0.036 -0.06 0">
-                    </a-entity>
-                    <a-entity id="letterD" text="
+                  position="-0.036 -0.06 0"
+                >
+                </a-entity>
+                <a-entity
+                  id="letterD"
+                  text="
                             value: D;
                             align: center;
                             anchor: center;
                             font: roboto"
-                        position="0 0 0">
-                    </a-entity>
-                    <a-entity 
-                        geometry="
+                  position="0 0 0"
+                >
+                </a-entity>
+                <a-entity
+                  geometry="
                             primitive: plane; 
                             width: .068;
-                            height: .068;"  
-                            material="
+                            height: .068;"
+                  material="
                                 color: #81B4B7;
                                 opacity: .5;"
-                            position="0 0 -0.0001"
-                    ></a-entity>
-                    </a-entity>
-                        <a-entity   
-                            geometry="
+                  position="0 0 -0.0001"
+                ></a-entity>
+              </a-entity>
+              <a-entity
+                geometry="
                                 primitive: plane; 
                                 width: .075;
                                 height: .075;
-                                "  
-                                material="
+                                "
+                material="
                                     src: #key;
                                     transparent: true;
                                     alphaTest: .5;
                                     color: #cdcdcd;
                                     "
-                                position=".08 0 -.5"
-                                
-                        >
-                            <a-entity 
-                                geometry="
+                position=".08 0 -.5"
+              >
+                <a-entity
+                  geometry="
                                     primitive: plane; 
                                     width: .067;
-                                    height: .067;"  
-                                    material="
+                                    height: .067;"
+                  material="
                                         color: #A9B5B6;
                                         opacity: .5;"
-                                    position="0 0 -.0001"
-                            ></a-entity>
-                        </a-entity>
-                        <a-entity   
-                        geometry="
+                  position="0 0 -.0001"
+                ></a-entity>
+              </a-entity>
+              <a-entity
+                geometry="
                             primitive: plane; 
                             width: .075;
                             height: .075;
-                            "  
-                            material="
+                            "
+                material="
                                 src: #key;
                                 transparent: true;
                                 alphaTest: .5;
                                 color: #cdcdcd;
                                 "
-                            position=".16 0 -.5"
-                            
-                    >
-                        <a-entity 
-                            geometry="
+                position=".16 0 -.5"
+              >
+                <a-entity
+                  geometry="
                                 primitive: plane; 
                                 width: .067;
-                                height: .067;"  
-                                material="
+                                height: .067;"
+                  material="
                                     color: #A9B5B6;
                                     opacity: .5;"
-                                position="0 0 -.0001"
-                        ></a-entity>
-                        </a-entity>
-                </a-entity>    
-                <a-entity id="rightControls" position=".3 0 0">
-                    <a-entity id="kKey"   
-                        geometry="
+                  position="0 0 -.0001"
+                ></a-entity>
+              </a-entity>
+            </a-entity>
+            <a-entity id="rightControls" position=".3 0 0">
+              <a-entity
+                id="kKey"
+                geometry="
                             primitive: plane; 
                             width: .075;
                             height: .075;
-                            "  
-                            material="
+                            "
+                material="
                                 src: #key;
                                 transparent: false;
                                 alphaTest: .5;
                                 "
-                            position="0 -.08 -.5"
-                            
-                    >
-                        <a-entity id="kGuide" text="
+                position="0 -.08 -.5"
+              >
+                <a-entity
+                  id="kGuide"
+                  text="
                             value: right stroke;
                             align: right;
                             anchor:  right;
                             opacity: 0;
                             color: #F2FD00;
                             font: exo2bold"
-                            position="0.038 -0.06 0">
-                        </a-entity>
-                        <a-entity id="letterK" text="
+                  position="0.038 -0.06 0"
+                >
+                </a-entity>
+                <a-entity
+                  id="letterK"
+                  text="
                                 value: K;
                                 align: center;
                                 anchor: center;
                                 font: roboto"
-                            position="0 0 0">
-                        </a-entity>
-                        <a-entity 
-                            geometry="
+                  position="0 0 0"
+                >
+                </a-entity>
+                <a-entity
+                  geometry="
                                 primitive: plane; 
                                 width: .068;
-                                height: .068;"  
-                                material="
+                                height: .068;"
+                  material="
                                     color: #81B4B7;
                                     opacity: .5;"
-                                position="0 0 -.0001"
-                        ></a-entity>
-                    </a-entity>
-                    <a-entity id="pKey"   
-                    geometry="
+                  position="0 0 -.0001"
+                ></a-entity>
+              </a-entity>
+              <a-entity
+                id="pKey"
+                geometry="
                         primitive: plane; 
                         width: .075;
                         height: .075;
-                        "  
-                        material="
+                        "
+                material="
                             src: #key;
                             transparent: false;
                             alphaTest: .5;
                             "
-                        position=".2 0 -.5"
-                        position="0 0 -.5"
-                        
-                >
-                    <a-entity id="pGuide" text="
+                position=".2 0 -.5"
+                position="0 0 -.5"
+              >
+                <a-entity
+                  id="pGuide"
+                  text="
                             value: right breath;
                             align: right;
                             anchor:  right;
                             color: #F2FD00;
                             opacity: 0;
                             font: exo2bold"
-                            
-                            position="0.038 .08 0">
-                    </a-entity>
-                    <a-entity id="letterP" text="
+                  position="0.038 .08 0"
+                >
+                </a-entity>
+                <a-entity
+                  id="letterP"
+                  text="
                             value: P;
                             align: center;
                             anchor: center;
                             font: roboto;
                             color: white"
-                        position="0 0 0">
-                    </a-entity>
-                    <a-entity 
-                        geometry="
+                  position="0 0 0"
+                >
+                </a-entity>
+                <a-entity
+                  geometry="
                             primitive: plane; 
                             width: .068;
-                            height: .068;"  
-                            material="
+                            height: .068;"
+                  material="
                                 color: #81B4B7;
                                 opacity: .5;"
-                            position="0 0 -0.0001"
-                    ></a-entity>
-                    </a-entity>
-                        <a-entity   
-                            geometry="
+                  position="0 0 -0.0001"
+                ></a-entity>
+              </a-entity>
+              <a-entity
+                geometry="
                                 primitive: plane; 
                                 width: .075;
                                 height: .075;
-                                "  
-                                material="
+                                "
+                material="
                                     src: #key;
                                     transparent: true;
                                     alphaTest: .5;
                                     color: #cdcdcd;
                                     "
-                                position=".04 0 -.5"
-                                
-                        >
-                            <a-entity 
-                                geometry="
+                position=".04 0 -.5"
+              >
+                <a-entity
+                  geometry="
                                     primitive: plane; 
                                     width: .067;
-                                    height: .067;"  
-                                    material="
+                                    height: .067;"
+                  material="
                                         color: #A9B5B6;
                                         opacity: .5;"
-                                    position="0 0 -.0001"
-                            ></a-entity>
-                        </a-entity>
-                        <a-entity   
-                        geometry="
+                  position="0 0 -.0001"
+                ></a-entity>
+              </a-entity>
+              <a-entity
+                geometry="
                             primitive: plane; 
                             width: .075;
                             height: .075;
-                            "  
-                            material="
+                            "
+                material="
                                 src: #key;
                                 transparent: true;
                                 alphaTest: .5;
                                 color: #cdcdcd;
                                 "
-                            position=".12 0 -.5"
-                            
-                    >
-                        <a-entity 
-                            geometry="
+                position=".12 0 -.5"
+              >
+                <a-entity
+                  geometry="
                                 primitive: plane; 
                                 width: .067;
-                                height: .067;"  
-                                material="
+                                height: .067;"
+                  material="
                                     color: #A9B5B6;
                                     opacity: .5;"
-                                position="0 0 -.0001"
-                        ></a-entity>
-                        </a-entity>
-                </a-entity>
-                
-            </a-entity>      
-        </a-entity>        
-    </a-entity>
-        <!-- entities -->
-
-
-
-
+                  position="0 0 -.0001"
+                ></a-entity>
+              </a-entity>
+            </a-entity>
+          </a-entity>
+        </a-entity>
+      </a-entity>
+      <!-- entities -->
     </a-scene>
-</body>
+  </body>
 </html>
