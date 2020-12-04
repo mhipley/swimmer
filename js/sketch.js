@@ -1,7 +1,7 @@
 // Test code for swimmer experience
 var w = window.innerWidth;
 var h = window.innerHeight;
-var decayTimeout;
+// var decayTimeout;
 
 // tap time starters
 var startTime;
@@ -12,7 +12,7 @@ var isDone;
 var tempo;
 let swimBpm = 80;
 var minBpm = 20;
-var maxBpm = 120;
+var maxBpm = 150;
 var scaledBpm;
 let bg;
 let waveVol = -20;
@@ -49,22 +49,7 @@ var lowLine = ['D4', 'D4', 'D4', null,'D4', 'D4', 'D4', null];
 function setup() {
 }
 
-function draw() {
-	background(bg);
-
-
-	// breath overlay gradient
-	from = color(255, 140, 140, 0.5 * 255);
-	to = color(89, 242, 255, 0.5 * 255);
-	scaledBpm = ((swimBpm - minBpm) / (maxBpm - minBpm));
-	
-	overlayC = lerpColor(from, to, scaledBpm.toFixed(2));
-
-	fill(overlayC);
-	noStroke();
-	rect(0, 0, w, h);
-
-	
+function draw() {	
 }
 
 // wave synth
@@ -89,7 +74,7 @@ harmonicSample.volume.value = harmonicVol;
 // get the user input via key, and set values for the move object
 
 function keyPressed() {
-
+	
 	let keyIndex = -1;
 	let move = [];
 	if (key >= 'a' && key <= 'z') {
@@ -105,26 +90,28 @@ function keyPressed() {
 			};
 			
 			var now = Tone.now();
+			doBeat();
 
 			
         }
         else if (key === 'q') {
-			doBeat();
+			
 			move = {
 					"side":"left",
 					"type":"breath"
 				};
         }
         else if (key === 'k') {
+			doBeat();
 			move = {
 				"side":"right",
 				"type":"stroke"
 			};
-			rightSeq.stop();
-			rightSeq.start();
+			// rightSeq.stop();
+			// rightSeq.start();
         }
         else if (key === 'p') {
-			doBeat();
+			
 			move = {
 					"side":"right",
 					"type":"breath"
@@ -134,13 +121,20 @@ function keyPressed() {
 		else {
 			// not a control letter
 		}
+		return move;
 	}
 
-	if(decayTimeout) {
-		clearTimeout(decayTimeout);
-		decayTimeout = null;
-	}
-	decayTimeout = setInterval(decayTempo, 2000);
+	const decayTimeout = setInterval(function() {
+		decayTempo();
+	}, 1000);
+	 
+	clearInterval(decayTimeout);
+
+	// if(decayTimeout) {
+	// 	clearTimeout(decayTimeout);
+	// 	decayTimeout = null;
+	// }
+	// decayTimeout = setInterval(decayTempo, 1000);
 	
 }
 
@@ -148,6 +142,7 @@ function keyPressed() {
 
 // automatically reduce tempo over time if no breath 
 function decayTempo() {
+	
 	if (swimBpm >= 30) {
 		swimBpm -= 10;
 	}
@@ -159,26 +154,6 @@ function decayTempo() {
 }
 ////
 
-//automatically reduce distance & height over time if no stroke
-function decayDistance() {
-	if (swimDistance >= 0) {
-		swimDistance -= 1;
-	}
-	else {
-		swimDistance = 0;
-	}	
-}
-
-function decayHeight() {
-	if (swimHeight >= -10) {
-		swimHeight -= 1;
-
-	}
-	else {
-		swimHeight = 0;
-	}
-}
-
 // synth setup & related functions
 
 initTempo();
@@ -186,39 +161,59 @@ initTempo();
 Tone.Transport.bpm.value = swimBpm;
 Tone.Transport.timeSignature = 4;
 
-// const drumSampler = new Tone.Sampler(
-// 	{
-// 	  A1: "samples/lotabla.wav"
-// 	},
-// 	{
-// 	  onload: () => {
-// 		document.querySelector("button").removeAttribute("disabled");
-// 	  }
-// 	}
-//   ).toDestination();
-// drumSampler.volume.value = drumVol;
-// Tone.Transport.scheduleRepeat(time => {
-// 	drumSampler.triggerAttack("A1").triggerRelease(time + "1m");
-// }, "1m");
+const drumSampler = new Tone.Sampler(
+	{
+	  A1: "samples/lotabla.wav"
+	},
+	{
+	  onload: () => {
+		document.querySelector("button").removeAttribute("disabled");
+	  }
+	}
+  ).toDestination();
+drumSampler.volume.value = drumVol;
+Tone.Transport.scheduleRepeat(time => {
+	drumSampler.triggerAttack("A1").triggerRelease(time + "1m");
+}, "1m");
 
 const bassSynth = new Tone.Synth().toDestination();
 bassSynth.volume.value = synthVol;
+
 const bassSeq = new Tone.Sequence((time, note) => {
-	console.log("bass: " + time)
 	bassSynth.triggerAttackRelease(note, "8n", time);
 }, bassLine).start(0);
 
 const chordSynth = new Tone.PolySynth().toDestination();
 chordSynth.volume.value = chordVol;
-const chordSeq = new Tone.Loop((time) => {
-	console.log("chords: "  + time);
-	chordSynth.triggerAttackRelease(chordA, "2m");
-	chordSynth.triggerAttackRelease(chordB, "1m", "+2m");
-    chordSynth.triggerAttackRelease(chordC, "1m", "+3m");
-}, "4m").start(0);
+
+const chordSeq = new Tone.Sequence(
+	(time, note) => {
+	  const chordLookup = {
+		chordA: {
+		  notes: ['C5', 'D#5', 'G5'],
+		  time: '2m',
+		},
+		chordB: {
+		  notes: ['C5', 'F5', 'A5'],
+		  time: '1m',
+		},
+		chordC: {
+		  notes: ['C5', 'E5', 'G5'],
+		  time: '1m',
+		},
+	  }
+   
+	  chordSynth.triggerAttackRelease(
+		chordLookup[note].notes,
+		chordLookup[note].time,
+		time
+	  )
+	},
+	['chordA', null, 'chordB', 'chordC'],
+	'1m'
+  ).start(0)
 
 function startSwim() {
-	console.log("clicked");
 	Tone.Transport.start();
 }
 
@@ -267,15 +262,16 @@ function countBeat(currTime) {
 		tempo = 20;
 		swimBpm = 20;
 	}
-	else if (tempo >= 120) {
-		tempo = 120;
-		swimBpm = 120;
+	else if (tempo >= maxBpm) {
+		tempo = maxBpm;
+		swimBpm = maxBpm;
 	}
 	else {
 		swimBpm = tempo;
 	}
 
 	Tone.Transport.bpm.rampTo(swimBpm, '1m');
+	
 
 }
 
@@ -286,5 +282,312 @@ function doneBeat() {
 ////
 
 
+////
+//A FRAME
+////
 
 
+
+AFRAME.registerComponent('env-controls', {
+	schema: {
+
+	},
+
+	scaleValue: function(inputZ, zMin, zMax, xMin, xMax) {
+		percent = (inputZ - zMin) / (zMax - zMin);
+		outputX = percent * (xMax - xMin) + xMin;
+		return outputX;
+	},
+
+
+	init: function () {
+		console.log(this);
+	
+	},
+
+
+	tick: function (time, timeDelta) {
+		let swimmer = this.el.children.camera;
+		let swimPos = swimmer.getAttribute('position');
+		let waveDens, waveColor, skyColor;
+		let waves = this.el.children.waves;
+		let sky = this.el.children.sky;
+		//min = 100
+		//max = -30
+
+		//wave min = 50
+		//wave max = 400
+
+		waveDens = this.scaleValue(swimPos.z, 100, -30, 400, 50);
+		skyColorChange = this.scaleValue(swimPos.z, 100, -30, 150, 255);
+		skyColor = 'rgb(255, 204, ' + Math.round(skyColorChange) + ')';
+		sky.setAttribute('color', skyColor);
+
+		waveColorChange = this.scaleValue(swimPos.z, 100, -30, 150, 255);
+		waveColor = 'rgb(255, 204, ' + Math.round(skyColorChange) + ')';
+		waves.setAttribute('color', waveColor);
+
+	}
+});
+
+AFRAME.registerComponent('swim-controls', {
+	schema: {
+
+		pKey:  {type: 'string', default: "P"},
+		kKey: {type: 'string', default: "K"},
+		qKey:     {type: 'string', default: "Q"},
+		dKey:    {type: 'string', default: "D"},
+		moveSpeed: {type: 'number', default: .5},  // A-Frame units/second
+		turnSpeed: {type: 'number', default: 30}, // degrees/second
+		lookSpeed: {type: 'number', default: 30},  // degrees/second
+
+		// use keyboard or other (e.g. joystick) to activate these controls
+		inputType: {type: 'string', default: "keyboard"}
+	},
+	convertKeyName: function(keyName)
+	{
+		if (keyName == " ")
+			return "Space";
+		else if (keyName.length == 1)
+			return keyName.toUpperCase();
+		else
+			return keyName;
+	},
+
+	registerKeyDown: function(keyName)
+	{
+		
+		// avoid adding duplicates of keys
+		if ( !this.keyPressedSet.has(keyName) )
+			this.keyPressedSet.add(keyName);
+			
+	},
+
+	registerKeyUp: function(keyName)
+	{
+       	this.keyPressedSet.delete(keyName);
+	},
+
+	isKeyPressed: function(keyName)
+	{
+       	return this.keyPressedSet.has(keyName);
+	},
+
+	init: function () {
+
+		this.keyPressedSet = new Set();
+		this.hasStarted = false;
+
+		let self = this;
+
+		document.addEventListener( "keydown", 
+			function(eventData) 
+			{ 
+				self.registerKeyDown( self.convertKeyName(eventData.key) );
+			}
+		);
+		
+		document.addEventListener( "keyup", 
+			function(eventData) 
+			{ 
+				self.registerKeyUp( self.convertKeyName(eventData.key) );
+			} 
+		);		
+
+		self.moveVector  = new THREE.Vector3(0,0,0);
+		self.movePercent = new THREE.Vector3(0,0,0);
+		// z = forward/backward
+		// x = left/right
+		// y = up/down
+
+		self.rotateVector  = new THREE.Vector2(0,0);
+		self.rotatePercent = new THREE.Vector2(0,0);
+		// y = turn angle
+		// x = look angle
+
+		// used as reference vector when turning
+		self.upVector = new THREE.Vector3(0,1,0);
+
+		// current rotation amounts
+		self.turnAngle = 0; // around global Y axis
+
+		document.addEventListener( "keydown", 
+		function(eventData) 
+			{ 
+				//toggle tutorial
+				if (eventData.keyCode === 84 ) {
+					if (self.el.children.guide.getAttribute('visible') === true) {
+						self.el.children.guide.setAttribute('visible', false);
+					}
+					else {
+						self.el.children.guide.setAttribute('visible', true);
+					}
+					
+				}
+
+				if (eventData.code === "Space") {
+					
+					if(self.hasStarted === false)
+					{
+						startSwim();
+						self.el.children.guide.setAttribute('visible', true);
+						self.el.children.titleCard.setAttribute('visible', false);		
+						self.hasStarted = true;				
+					}
+					else {
+						return;
+					}
+
+				}
+
+			
+			});
+
+		document.addEventListener( "keyup", 
+			function(eventData) 
+			{ 
+				
+				// self.rotatePercent.set(0,0);
+
+				self.movePercent.set(0,0,0);
+				let currentPos = self.el.object3D.position;
+
+				if (currentPos.z >= -55) {
+								
+					if (eventData.keyCode === 75 | eventData.keyCode === 68) {
+						self.moveVector.z -= 3;
+						let vectorSum = new THREE.Vector3(0,1.6,0);
+						vectorSum.addVectors(self.moveVector, self.el.object3D.position);
+						var vectorString = vectorSum.toArray().join(" ");
+						var animeString = 'property: position; to: [' + vectorString + ']';
+					}
+
+				}
+				else {
+					self.moveVector.z = 0;
+				}
+
+				//75 = k
+				if (eventData.keyCode === 75) {
+					self.el.children.guide.children.rightControls.children.kKey.setAttribute('material', 'src: #key; transparent: false; alphaTest: .5; color: white;');
+					self.el.children.guide.children.rightControls.children.kKey.children.letterK.setAttribute('text', 'color: white');
+					self.el.children.guide.children.rightControls.children.kKey.children.kGuide.setAttribute('text', 'opacity:0');
+				}
+				//68 = d
+				if (eventData.keyCode === 68) {
+
+					self.el.children.guide.children.leftControls.children.dKey.setAttribute('material', 'src: #key; transparent: false; alphaTest: .5; color: white;');
+					self.el.children.guide.children.leftControls.children.dKey.children.dGuide.setAttribute('text', 'opacity:0');
+					self.el.children.guide.children.leftControls.children.dKey.children.letterD.setAttribute('text', 'color: white');					
+				}				
+
+				//81 = q
+				if (eventData.keyCode === 81) {
+					self.el.children.guide.children.leftControls.children.qKey.setAttribute('material', 'src: #key; transparent: false; alphaTest: .5; color: white;');
+					self.el.children.guide.children.leftControls.children.qKey.children.letterQ.setAttribute('text', 'color: white');
+					self.el.children.guide.children.leftControls.children.qKey.children.qGuide.setAttribute('text', 'opacity:0');
+					var animeString = 'property: rotation; to: 0 15 -5; dur: 200; easing: linear; loop: 2; dir: alternate';
+
+					
+				}
+
+				//80 = p
+				if (eventData.keyCode === 80) {
+					self.el.children.guide.children.rightControls.children.pKey.setAttribute('material', 'src: #key; transparent: false; alphaTest: .5; color: white;');
+					self.el.children.guide.children.rightControls.children.pKey.children.letterP.setAttribute('text', 'color: white');
+					self.el.children.guide.children.rightControls.children.pKey.children.pGuide.setAttribute('text', 'opacity:0');
+					var animeString = 'property: rotation; to: 0 -15 5; dur: 200; easing: linear; loop: 2; dir: alternate';
+				}
+
+
+				self.el.removeAttribute('animation');
+				self.el.setAttribute('animation', animeString);
+
+
+			} 
+		);
+
+	},
+
+	tick: function (time, timeDelta) 
+	{
+
+		let moveAmount = (timeDelta/1000) * this.data.moveSpeed;
+		// need to convert angle measures from degrees to radians
+		let turnAmount = (timeDelta/1000) * THREE.Math.degToRad(this.data.turnSpeed);
+		let lookAmount = (timeDelta/1000) * THREE.Math.degToRad(this.data.lookSpeed);
+		let maxLookAngle = THREE.Math.degToRad(this.data.maxLookAngle);
+
+		// rotations
+		this.movePercent.set(0,0,0);
+		this.rotatePercent.set(0,0);
+		
+		// reset values
+		let totalTurnAngle = 0;
+		let totalLookAngle = 0;
+
+		// translations
+
+		this.turnAngle += this.rotatePercent.y * turnAmount;
+		this.el.object3D.rotation.y = this.turnAngle;
+
+		// this only works when rotation order = "YXZ"
+		let finalTurnAngle = this.el.object3D.rotation.y;
+		
+		let c = Math.cos(finalTurnAngle);
+		let s = Math.sin(finalTurnAngle);	
+		
+		// forward(z) direction: [ -s,  0, -c ]
+		//   right(x) direction: [  c,  0, -s ]
+		//      up(y) direction: [  0,  1,  0 ]
+		// multiply each by (maximum) movement amount and percentages (how much to move in that direction)
+		let currentPos = this.el.object3D.position;
+		
+		if (currentPos.z <= 100 && currentPos.z >= -40) {
+			this.movePercent.z -= 2;
+		}
+		else if(currentPos.z <= -30)
+		{
+			this.movePercent.z -=5;
+		}
+		else {
+
+			this.movePercent.z += 0;
+		}
+
+
+		this.moveVector.set( -s * this.movePercent.z + c * this.movePercent.x,
+			1 * this.movePercent.y,
+		   -c * this.movePercent.z - s * this.movePercent.x ).multiplyScalar( moveAmount );
+
+		this.el.object3D.position.add( this.moveVector );	
+		
+		// make active key yellow 
+
+		if (this.isKeyPressed(this.data.pKey)) {
+			this.el.children.guide.children.rightControls.children.pKey.setAttribute('material', 'src: #key; transparent: false; alphaTest: .5; color:#F2FD00;');
+			this.el.children.guide.children.rightControls.children.pKey.children.letterP.setAttribute('text', 'color: #F2FD00');
+			this.el.children.guide.children.rightControls.children.pKey.children.pGuide.setAttribute('text', 'opacity: 1');
+
+		}
+			
+		if (this.isKeyPressed(this.data.qKey)) {
+			this.el.children.guide.children.leftControls.children.qKey.setAttribute('material', 'src: #key; transparent: false; alphaTest: .5; color:#F2FD00;');
+			this.el.children.guide.children.leftControls.children.qKey.children.letterQ.setAttribute('text', 'color: #F2FD00');
+			this.el.children.guide.children.leftControls.children.qKey.children.qGuide.setAttribute('text', 'opacity: 1');
+		}
+
+		if (this.isKeyPressed(this.data.dKey)) {
+			this.el.children.guide.children.leftControls.children.dKey.setAttribute('material', 'src: #key; transparent: false; alphaTest: .5; color:#F2FD00;');
+			this.el.children.guide.children.leftControls.children.dKey.children.letterD.setAttribute('text', 'color: #F2FD00');
+			this.el.children.guide.children.leftControls.children.dKey.children.dGuide.setAttribute('text', 'opacity: 1');
+		}
+
+		if (this.isKeyPressed(this.data.kKey)) {
+			this.el.children.guide.children.rightControls.children.kKey.setAttribute('material', 'src: #key; transparent: false; alphaTest: .5; color:#F2FD00;');
+			this.el.children.guide.children.rightControls.children.kKey.children.letterK.setAttribute('text', 'color: #F2FD00');
+			this.el.children.guide.children.rightControls.children.kKey.children.kGuide.setAttribute('text', 'opacity: 1');
+		}		
+
+	}
+});
