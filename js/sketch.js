@@ -302,6 +302,8 @@ AFRAME.registerComponent('env-controls', {
 
 	init: function () {
 		console.log(this);
+		// this.el.children.waves.setAttribute('color', '#ff9900');
+		// this.el.children.waves.setAttribute('density', 400);
 	
 	},
 
@@ -318,14 +320,16 @@ AFRAME.registerComponent('env-controls', {
 		//wave min = 50
 		//wave max = 400
 
-		waveDens = this.scaleValue(swimPos.z, 100, -30, 400, 50);
+		
 		skyColorChange = this.scaleValue(swimPos.z, 100, -30, 150, 255);
 		skyColor = 'rgb(255, 204, ' + Math.round(skyColorChange) + ')';
 		sky.setAttribute('color', skyColor);
+		
 
-		waveColorChange = this.scaleValue(swimPos.z, 100, -30, 150, 255);
-		waveColor = 'rgb(255, 204, ' + Math.round(skyColorChange) + ')';
-		waves.setAttribute('color', waveColor);
+
+		waveDens = Math.round(this.scaleValue(swimPos.z, 100, -30, 400, 50));
+		waves.setAttribute('density', waveDens);
+
 
 	}
 });
@@ -384,6 +388,7 @@ AFRAME.registerComponent('swim-controls', {
 			function(eventData) 
 			{ 
 				self.registerKeyDown( self.convertKeyName(eventData.key) );
+				
 			}
 		);
 		
