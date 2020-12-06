@@ -303,7 +303,6 @@ AFRAME.registerComponent('env-controls', {
 	init: function () {
 		// this.el.children.waves.setAttribute('color', '#ff9900');
 		// this.el.children.waves.setAttribute('density', 400);
-		console.log("test");
 	},
 
 
