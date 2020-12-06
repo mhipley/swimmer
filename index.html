@@ -72,19 +72,34 @@
         </a-entity>
         <a-entity id="fish">
 
-
-            <a-entity position="-2 0 96"
-            animation="property: rotation; to: 0 360 360; dur: 3000; easing: linear; loop: true">
-            <a-plane material="src: #fish; transparent: false; alphaTest: .5;" height=".25" width=".25" rotation="0 0 0" position="0 .4 .4"></a-plane>
+            <a-entity id="fishGroup1" position="-2 0 70">
+                <a-entity position="0 0 0"
+                animation="property: rotation; to: 0 360 360; dur: 3000; easing: linear; loop: true">
+                <a-plane material="src: #fish; side:double; transparent: false; alphaTest: .5;" height=".25" width=".25" rotation="0 0 0" position="0 .4 .4"></a-plane>
+                </a-entity>
+                <a-entity position=".2 0 0"
+                animation="property: rotation; to: 0 360 360; dur: 3500; easing: linear; loop: true">
+                <a-plane material="src: #fish; side:double; transparent: false; alphaTest: .5;" height=".25" width=".25" rotation="0 0 0" position="0 .4 .4"></a-plane>
+                </a-entity>
+                <a-entity position=".4 0 0"
+                animation="property: rotation; to: 0 360 360; dur: 4000; easing: linear; loop: true">
+                <a-plane material="src: #fish; side:double; transparent: false; alphaTest: .5;" height=".25" width=".25" rotation="0 0 0" position="0 .4 .4"></a-plane>
+                </a-entity>
             </a-entity>
-            <a-entity position="-1.8 0 96"
-            animation="property: rotation; to: 0 360 360; dur: 3500; easing: linear; loop: true">
-            <a-plane material="src: #fish; transparent: false; alphaTest: .5;" height=".25" width=".25" rotation="0 0 0" position="0 .4 .4"></a-plane>
-            </a-entity>
-            <a-entity position="-1.6 0 96"
-            animation="property: rotation; to: 0 360 360; dur: 4000; easing: linear; loop: true">
-            <a-plane material="src: #fish; transparent: false; alphaTest: .5;" height=".25" width=".25" rotation="0 0 0" position="0 .4 .4"></a-plane>
-            </a-entity>
+            <a-entity id="fishGroup1" position="2 0 50" rotation="0 180 0">
+                <a-entity position="0 0 0"
+                animation="property: rotation; to: 0 360 360; dur: 3000; easing: linear; loop: true">
+                <a-plane material="src: #fish; side:double; transparent: false; alphaTest: .5;" height=".25" width=".25" rotation="0 0 0" position="0 .4 .4"></a-plane>
+                </a-entity>
+                <a-entity position=".2 0 0"
+                animation="property: rotation; to: 0 360 360; dur: 3500; easing: linear; loop: true">
+                <a-plane material="src: #fish; side:double;  transparent: false; alphaTest: .5;" height=".25" width=".25" rotation="0 0 0" position="0 .4 .4"></a-plane>
+                </a-entity>
+                <a-entity position=".4 0 0"
+                animation="property: rotation; to: 0 360 360; dur: 4000; easing: linear; loop: true">
+                <a-plane material="src: #fish; side:double; transparent: false; alphaTest: .5;" height=".25" width=".25" rotation="0 0 0" position="0 .4 .4"></a-plane>
+                </a-entity>
+            </a-entity>            
 <!-- 
             <a-entity position="-1 0 96"
             animation="property: rotation; to: 0 0 360; dur: 3000; easing: linear; loop: true">

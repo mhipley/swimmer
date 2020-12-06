@@ -407,6 +407,7 @@ AFRAME.registerComponent('swim-controls', {
 
 		this.keyPressedSet = new Set();
 		this.hasStarted = false;
+		this.lastKeypress = null;
 
 
 		let self = this;
@@ -415,6 +416,8 @@ AFRAME.registerComponent('swim-controls', {
 			function(eventData) 
 			{ 
 				self.registerKeyDown( self.convertKeyName(eventData.key) );
+				self.lastKeypress = eventData.timeStamp;
+				
 				
 			}
 		);
@@ -560,6 +563,7 @@ AFRAME.registerComponent('swim-controls', {
 		let lookAmount = (timeDelta/1000) * THREE.Math.degToRad(this.data.lookSpeed);
 		let maxLookAngle = THREE.Math.degToRad(this.data.maxLookAngle);
 
+
 		// rotations
 		this.movePercent.set(0,0,0);
 		this.rotatePercent.set(0,0);
@@ -584,18 +588,33 @@ AFRAME.registerComponent('swim-controls', {
 		//      up(y) direction: [  0,  1,  0 ]
 		// multiply each by (maximum) movement amount and percentages (how much to move in that direction)
 		let currentPos = this.el.object3D.position;
-		
+
+
 		if (currentPos.z <= 98 && currentPos.z >= -40) {
-			this.movePercent.z -= 2;
+			if ((time - this.lastKeypress) >= 500){
+				this.movePercent.z -= 2;
+			}
+			else {
+				this.movePercent.z += 0;
+			}
+			
 		}
 		else if(currentPos.z <= -30)
 		{
-			this.movePercent.z -=5;
+			if ((time - this.lastKeypress) >= 2000){
+				this.movePercent.z -= 2;
+			}
+			else {
+				this.movePercent.z += 0;
+			}
 		}
 		else {
 
 			this.movePercent.z += 0;
 		}
+		
+
+
 
 
 		this.moveVector.set( -s * this.movePercent.z + c * this.movePercent.x,
