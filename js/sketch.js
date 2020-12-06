@@ -301,34 +301,38 @@ AFRAME.registerComponent('env-controls', {
 
 
 	init: function () {
-		console.log(this);
 		// this.el.children.waves.setAttribute('color', '#ff9900');
 		// this.el.children.waves.setAttribute('density', 400);
-	
+		console.log("test");
 	},
 
 
 	tick: function (time, timeDelta) {
 		let swimmer = this.el.children.camera;
 		let swimPos = swimmer.getAttribute('position');
-		let waveDens, waveColor, skyColor;
+		let waveDens, waveColor, skyColor, sunPosY;
 		let waves = this.el.children.waves;
 		let sky = this.el.children.sky;
+		let sun = this.el.children.sun;
+
 		//min = 100
 		//max = -30
 
 		//wave min = 50
 		//wave max = 400
 
+
 		
 		skyColorChange = this.scaleValue(swimPos.z, 100, -30, 150, 255);
 		skyColor = 'rgb(255, 204, ' + Math.round(skyColorChange) + ')';
 		sky.setAttribute('color', skyColor);
-		
 
+		sunPosY = this.scaleValue(swimPos.z, 100, -30, 220, 100);
+		sun.object3D.position.y = sunPosY;
+			
 
-		waveDens = Math.round(this.scaleValue(swimPos.z, 100, -30, 400, 50));
-		waves.setAttribute('density', waveDens);
+		// waveDens = Math.round(this.scaleValue(swimPos.z, 100, -30, 400, 50));
+		// waves.setAttribute('density', waveDens);
 
 
 	}
@@ -377,10 +381,13 @@ AFRAME.registerComponent('swim-controls', {
        	return this.keyPressedSet.has(keyName);
 	},
 
+
 	init: function () {
+
 
 		this.keyPressedSet = new Set();
 		this.hasStarted = false;
+
 
 		let self = this;
 
@@ -445,6 +452,8 @@ AFRAME.registerComponent('swim-controls', {
 
 				}
 
+				
+
 			
 			});
 
@@ -457,56 +466,64 @@ AFRAME.registerComponent('swim-controls', {
 				self.movePercent.set(0,0,0);
 				let currentPos = self.el.object3D.position;
 
-				if (currentPos.z >= -55) {
+				if (self.hasStarted === true)
+				{
+
+					if (currentPos.z >= -55) {
 								
-					if (eventData.keyCode === 75 | eventData.keyCode === 68) {
-						self.moveVector.z -= 3;
-						let vectorSum = new THREE.Vector3(0,1.6,0);
-						vectorSum.addVectors(self.moveVector, self.el.object3D.position);
-						var vectorString = vectorSum.toArray().join(" ");
-						var animeString = 'property: position; to: [' + vectorString + ']';
+						if (eventData.keyCode === 75 | eventData.keyCode === 68) {
+							self.moveVector.z -= 2;
+							let vectorSum = new THREE.Vector3(0,1.6,0);
+							vectorSum.addVectors(self.moveVector, self.el.object3D.position);
+							var vectorString = vectorSum.toArray().join(" ");
+							var animeString = 'property: position; to: [' + vectorString + ']';
+						}
+	
 					}
-
-				}
-				else {
-					self.moveVector.z = 0;
-				}
-
-				//75 = k
-				if (eventData.keyCode === 75) {
-					self.el.children.guide.children.rightControls.children.kKey.setAttribute('material', 'src: #key; transparent: false; alphaTest: .5; color: white;');
-					self.el.children.guide.children.rightControls.children.kKey.children.letterK.setAttribute('text', 'color: white');
-					self.el.children.guide.children.rightControls.children.kKey.children.kGuide.setAttribute('text', 'opacity:0');
-				}
-				//68 = d
-				if (eventData.keyCode === 68) {
-
-					self.el.children.guide.children.leftControls.children.dKey.setAttribute('material', 'src: #key; transparent: false; alphaTest: .5; color: white;');
-					self.el.children.guide.children.leftControls.children.dKey.children.dGuide.setAttribute('text', 'opacity:0');
-					self.el.children.guide.children.leftControls.children.dKey.children.letterD.setAttribute('text', 'color: white');					
-				}				
-
-				//81 = q
-				if (eventData.keyCode === 81) {
-					self.el.children.guide.children.leftControls.children.qKey.setAttribute('material', 'src: #key; transparent: false; alphaTest: .5; color: white;');
-					self.el.children.guide.children.leftControls.children.qKey.children.letterQ.setAttribute('text', 'color: white');
-					self.el.children.guide.children.leftControls.children.qKey.children.qGuide.setAttribute('text', 'opacity:0');
-					var animeString = 'property: rotation; to: 0 15 -5; dur: 200; easing: linear; loop: 2; dir: alternate';
-
+					else {
+						self.moveVector.z = 0;
+					}
+	
+					//75 = k
+					if (eventData.keyCode === 75) {
+						self.el.children.guide.children.rightControls.children.kKey.setAttribute('material', 'src: #key; transparent: false; alphaTest: .5; color: #4F3266;');
+	
+						self.el.children.guide.children.rightControls.children.kKey.children.kGuide.setAttribute('text', 'opacity:0');
+					}
+					//68 = d
+					if (eventData.keyCode === 68) {
+	
+						self.el.children.guide.children.leftControls.children.dKey.setAttribute('material', 'src: #key; transparent: false; alphaTest: .5; color: #4F3266;');
+						self.el.children.guide.children.leftControls.children.dKey.children.dGuide.setAttribute('text', 'opacity:0');
 					
+					}				
+	
+					//81 = q
+					if (eventData.keyCode === 81) {
+						self.el.children.guide.children.leftControls.children.qKey.setAttribute('material', 'src: #key; transparent: false; alphaTest: .5; color: #4F3266;');
+						self.el.children.guide.children.leftControls.
+						children.qKey.children.qGuide.setAttribute('text', 'opacity:0');
+						var animeString = 'property: rotation; to: 0 15 -5; dur: 500; easing: linear; loop: 2; dir: alternate';
+	
+						
+					}
+	
+					//80 = p
+					if (eventData.keyCode === 80) {
+						self.el.children.guide.children.rightControls.children.pKey.setAttribute('material', 'src: #key; transparent: false; alphaTest: .5; color: #4F3266;');
+	
+						self.el.children.guide.children.rightControls.children.pKey.children.pGuide.setAttribute('text', 'opacity:0');
+						var animeString = 'property: rotation; to: 0 -15 5; dur: 500; easing: linear; loop: 2; dir: alternate';
+					}
+	
+	
+					self.el.removeAttribute('animation');
+					self.el.setAttribute('animation', animeString);
+
+
 				}
 
-				//80 = p
-				if (eventData.keyCode === 80) {
-					self.el.children.guide.children.rightControls.children.pKey.setAttribute('material', 'src: #key; transparent: false; alphaTest: .5; color: white;');
-					self.el.children.guide.children.rightControls.children.pKey.children.letterP.setAttribute('text', 'color: white');
-					self.el.children.guide.children.rightControls.children.pKey.children.pGuide.setAttribute('text', 'opacity:0');
-					var animeString = 'property: rotation; to: 0 -15 5; dur: 200; easing: linear; loop: 2; dir: alternate';
-				}
 
-
-				self.el.removeAttribute('animation');
-				self.el.setAttribute('animation', animeString);
 
 
 			} 
@@ -548,7 +565,7 @@ AFRAME.registerComponent('swim-controls', {
 		// multiply each by (maximum) movement amount and percentages (how much to move in that direction)
 		let currentPos = this.el.object3D.position;
 		
-		if (currentPos.z <= 100 && currentPos.z >= -40) {
+		if (currentPos.z <= 98 && currentPos.z >= -40) {
 			this.movePercent.z -= 2;
 		}
 		else if(currentPos.z <= -30)
@@ -571,26 +588,26 @@ AFRAME.registerComponent('swim-controls', {
 
 		if (this.isKeyPressed(this.data.pKey)) {
 			this.el.children.guide.children.rightControls.children.pKey.setAttribute('material', 'src: #key; transparent: false; alphaTest: .5; color:#F2FD00;');
-			this.el.children.guide.children.rightControls.children.pKey.children.letterP.setAttribute('text', 'color: #F2FD00');
+
 			this.el.children.guide.children.rightControls.children.pKey.children.pGuide.setAttribute('text', 'opacity: 1');
 
 		}
 			
 		if (this.isKeyPressed(this.data.qKey)) {
 			this.el.children.guide.children.leftControls.children.qKey.setAttribute('material', 'src: #key; transparent: false; alphaTest: .5; color:#F2FD00;');
-			this.el.children.guide.children.leftControls.children.qKey.children.letterQ.setAttribute('text', 'color: #F2FD00');
+
 			this.el.children.guide.children.leftControls.children.qKey.children.qGuide.setAttribute('text', 'opacity: 1');
 		}
 
 		if (this.isKeyPressed(this.data.dKey)) {
 			this.el.children.guide.children.leftControls.children.dKey.setAttribute('material', 'src: #key; transparent: false; alphaTest: .5; color:#F2FD00;');
-			this.el.children.guide.children.leftControls.children.dKey.children.letterD.setAttribute('text', 'color: #F2FD00');
+
 			this.el.children.guide.children.leftControls.children.dKey.children.dGuide.setAttribute('text', 'opacity: 1');
 		}
 
 		if (this.isKeyPressed(this.data.kKey)) {
 			this.el.children.guide.children.rightControls.children.kKey.setAttribute('material', 'src: #key; transparent: false; alphaTest: .5; color:#F2FD00;');
-			this.el.children.guide.children.rightControls.children.kKey.children.letterK.setAttribute('text', 'color: #F2FD00');
+
 			this.el.children.guide.children.rightControls.children.kKey.children.kGuide.setAttribute('text', 'opacity: 1');
 		}		
 

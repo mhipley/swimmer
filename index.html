@@ -22,43 +22,131 @@
         <a-assets>
             <img id="key" src="img/key.png">
             <img id="space" src="img/space-bar.png">
+            <img id="bird1" src="img/bird-1.png" >
+            <img id="bird2" src="img/bird-2.png" >
+            <img id="bird3" src="img/bird-3.png" >
+            <img id="dolphin" src="img/dolphin.png" >
+            <img id="fish" src="img/fish.png" >
+            <img id="whale1" src="img/whale-1.png" >
+            <img id="whale2" src="img/whale-2.png" >
+            <img id="whale3" src="img/whale-3.png" >
+            <img id="paper" src="img/textured-paper.png" >
+            <img id="sky" src="img/sky-base.png">
         </a-assets>
 
         <!-- environment -->
         <!-- <a-sky></a-sky> -->
     <a-entity id="env" position="0 0 0" env-controls>
-        <a-sky id="sky"  color="#6EBAA7"></a-sky>
+        <a-sky id="sky"  src="#sky"></a-sky>
+        <a-circle id="sun"
+            color="#fff"
+            radius="20"
+            position="0 220 -200"
+        >
+            <a-entity light="type: point; intensity: 0.75; distance: 0; decay: 2"
+            position="0 0 -1"></a-entity>
+        </a-circle>
 
-        <a-ocean id="waves" color="#92E2E2" width="100" depth="200" speed="2" density="200"></a-ocean>
-        
+        <a-ocean id="waves" color="#92E2E2" width="100" depth="200" speed="2" density="300"></a-ocean>
+        <a-entity id="dolphins">
+            <a-plane 
+                material="src: #dolphin; transparent: false; alphaTest: .5;" 
+                height="1" 
+                width="1" 
+                rotation="0 5 -30" 
+                position="-2 .25 80"
+                animation="dir: alternate; property: position; to: -2 0 80; dur: 2000; easing: linear; loop: true"
+                animation__1="dir: alternate; property: rotation; to: 0 5 30; dur: 2000; easing: linear; loop: true"
+                ></a-plane>
+                <a-plane 
+                material="src: #dolphin; transparent: false; alphaTest: .5; side: double;" 
+                height="1" 
+                width="1" 
+                rotation="0 165 -180" 
+                position="2 -1 96"
+                animation="dir: alternate; property: position; to: 2 1 96; dur: 3000; easing: easeInOutQuad; loop: true"
+                animation__1="dir: normal; property: rotation; to: 0 165 180; dur: 6000; easing: linear; loop: true"
+                ></a-plane>            
+        </a-entity>
+        <a-entity id="fish">
 
-        <!-- <a-light type="ambient" color="#ccc"></a-light>
-        <a-light color="#ddf" distance="100" intensity="0.4" type="point"></a-light>
+            <a-entity position="0 1 97">
+
+
+            <a-entity position="-2 0 96"
+            animation="property: rotation; to: 0 360 360; dur: 3000; easing: linear; loop: true">
+            <a-plane material="src: #fish; transparent: false; alphaTest: .5;" height=".25" width=".25" rotation="0 0 0" position="0 .4 .4"></a-plane>
+            </a-entity>
+            <a-entity position="-1.8 0 96"
+            animation="property: rotation; to: 0 360 360; dur: 3500; easing: linear; loop: true">
+            <a-plane material="src: #fish; transparent: false; alphaTest: .5;" height=".25" width=".25" rotation="0 0 0" position="0 .4 .4"></a-plane>
+            </a-entity>
+            <a-entity position="-1.6 0 96"
+            animation="property: rotation; to: 0 360 360; dur: 4000; easing: linear; loop: true">
+            <a-plane material="src: #fish; transparent: false; alphaTest: .5;" height=".25" width=".25" rotation="0 0 0" position="0 .4 .4"></a-plane>
+            </a-entity>
+<!-- 
+            <a-entity position="-1 0 96"
+            animation="property: rotation; to: 0 0 360; dur: 3000; easing: linear; loop: true">
+            <a-plane material="src: #fish; transparent: false; alphaTest: .5;" height=".25" width=".25" rotation="0 0 0" position="0 .4 .4"></a-plane>
+            </a-entity>
+            <a-entity position="-.8 0 96"
+            animation="property: rotation; to: 0 0 360; dur: 3500; easing: linear; loop: true">
+            <a-plane material="src: #fish; transparent: false; alphaTest: .5;" height=".25" width=".25" rotation="0 0 0" position="0 .4 .4"></a-plane>
+            </a-entity>
+            <a-entity position="-.6 0 96"
+            animation="property: rotation; to: 0 0 360; dur: 4000; easing: linear; loop: true">
+            <a-plane material="src: #fish; transparent: false; alphaTest: .5;" height=".25" width=".25" rotation="0 0 0" position="0 .4 .4"></a-plane>
+            </a-entity> -->
+        </a-entity>
+        <!-- <a-entity id="whales">
+            <a-plane material="src: #whale3; transparent: false; alphaTest: .5;" height="1" width="1" rotation="0 0 0" position="1 0 95"></a-plane>
+            
+        </a-entity> -->
+        <a-entity id="birds">
+            <a-entity id="birdWrapper" position="1 1 97" rotation="0 0 0"
+            animation="property: rotation; to: 0 360 360; dur:6000; easing: easeInOutQuad; loop: true">
+                <a-plane material="src: #bird1; transparent: false; alphaTest: .5;" height=".25" width=".25" rotation="0 0 45" position=".5 .5 0"></a-plane>
+            </a-entity>
+            <a-entity id="birdWrapper"  position="0 1 97" rotation="0 360 0"
+            animation="property: rotation; to: 0 0 0; dur: 4000; easing: easeInOutCirc; loop: true">
+                <a-plane material="src: #bird2; transparent: false; alphaTest: .5;" height=".25" width=".25" rotation="0 0 -45" position=".5 .25 0"></a-plane>
+            </a-entity>
+            <a-entity id="birdWrapper"  position="-1 1 94" rotation="0 -180 0"
+            animation="property: rotation; to: 0 180 360; dur: 8000; easing: easeInOutCubic; loop: true">
+                <a-plane material="src: #bird3; transparent: false; alphaTest: .5;" height=".25" width=".25" rotation="0 0 180" position="0 .5 .5"></a-plane>
+            </a-entity>
+        </a-entity>
+
+        <a-light type="ambient" color="#ffa0d4" intensity="1" ></a-light>
+        <!-- <a-light color="#ddf" distance="100" intensity="0.4" type="point"></a-light>
         <a-light color="#ddf" position="3 10 -10" distance="50" intensity="0.4" type="point"></a-light> -->
 
-        <a-entity id="camera" camera="" position="0 1.6 90" 
+        <a-entity id="camera" camera="" position="0 .25 98" 
         swim-controls look-controls>
+       
             <a-entity id="titleCard" position="0 0 0" visible="true">
                 <a-entity 
+                material="fog: false"
                 text="
                     value: tap-a-lap-splash;
-                    color: #F2FD00;
-                    font: exo2bold;
+                    color: #4F3266;
                     align: center;
-                    font: roboto;
+                    font: fonts/porpora.fnt;
                     anchor: center;"
                     scale="2 2 2"
                     position="0 .265 -0.5"></a-entity>
                 <a-entity 
+                material="fog: false"
                 text="
                     value: a rhythmic meditation for swimmers and the people who love them;
-                    color: white;
+                    color: #4F3266;
                     align: center;
                     font: roboto;
                     wrapCount: 100;
                     anchor: center;"
                     scale="1 1 1"
-                    position="0 .2 -0.5"></a-entity>
+                    position="0 .18 -0.5"></a-entity>
                    
                     <a-entity id="spaceKey"   
                     geometry="
@@ -72,6 +160,8 @@
                             src: #space;
                             transparent: false;
                             alphaTest: .5;
+                            fog: false;
+                            color: #4F3266;
                             "
                         position="0 .1 -.5"
                         
@@ -81,7 +171,8 @@
                             value: PRESS SPACEBAR TO BEGIN;
                             align: center;
                             anchor: center;
-                            
+                            color: #4F3266;
+                            fog: false;
                             font: roboto"
                             scale=".75 .75 .75"
                         position="0 0 0">
@@ -94,7 +185,7 @@
                 <a-entity 
                 text="
                     value: PRESS T TO TOGGLE GUIDE;
-                    color: white;
+                    color: #4F3266;
                     align: center;
                     font: roboto;
                     anchor: center;"
@@ -111,23 +202,25 @@
                                 src: #key;
                                 transparent: false;
                                 alphaTest: .5;
+                                color: #4F3266;
                                 "
                             position="0 0 -.5"
                             
                     >   
                         <a-entity id="qGuide" text="
-                                value: left breath;
+                                value: LEFT BREATH;
                                 align: left;
                                 anchor:  left;
                                 opacity: 0;
-                                color: #F2FD00;
-                                font: exo2bold"
-                            position="-0.036 .08 0">
+                                color: #4F3266;
+                                font: roboto;"
+                            position="-0.036 .06 0" scale=".5 .5 .5">
                         </a-entity>
                         <a-entity id="letterQ" text="
                                 value: Q;
                                 align: center;
                                 anchor: center;
+                                color: #4F3266;
                                 font: roboto"
                             position="0 0 0">
                         </a-entity>
@@ -152,23 +245,26 @@
                             src: #key;
                             transparent: false;
                             alphaTest: .5;
+                            color: #4F3266;
                             "
                         position=".2 -.08 -.5"
                         
                 >
                     <a-entity id="dGuide" text="
-                        value: left stroke;
+                        value: LEFT STROKE;
                         align: left;
                         anchor:  left;
                         opacity: 0;
-                        color: #F2FD00;
-                        font: exo2bold"
+                        color: #4F3266;
+                        font: roboto;"
+                        scale=".5 .5 .5"
                         position="-0.036 -0.06 0">
                     </a-entity>
                     <a-entity id="letterD" text="
                             value: D;
                             align: center;
                             anchor: center;
+                            color: #4F3266;
                             font: roboto"
                         position="0 0 0">
                     </a-entity>
@@ -247,23 +343,26 @@
                                 src: #key;
                                 transparent: false;
                                 alphaTest: .5;
+                                color: #4F3266;
                                 "
                             position="0 -.08 -.5"
                             
                     >
                         <a-entity id="kGuide" text="
-                            value: right stroke;
+                            value: RIGHT STROKE;
                             align: right;
                             anchor:  right;
                             opacity: 0;
-                            color: #F2FD00;
-                            font: exo2bold"
+                            color: #4F3266;
+                            font: roboto"
+                            scale=".5 .5 .5"
                             position="0.038 -0.06 0">
                         </a-entity>
                         <a-entity id="letterK" text="
                                 value: K;
                                 align: center;
                                 anchor: center;
+                                color: #4F3266;
                                 font: roboto"
                             position="0 0 0">
                         </a-entity>
@@ -287,6 +386,7 @@
                         material="
                             src: #key;
                             transparent: false;
+                            color: #4F3266;
                             alphaTest: .5;
                             "
                         position=".2 0 -.5"
@@ -294,21 +394,21 @@
                         
                 >
                     <a-entity id="pGuide" text="
-                            value: right breath;
+                            value: RIGHT BREATH;
                             align: right;
                             anchor:  right;
-                            color: #F2FD00;
+                            color: #4F3266;
                             opacity: 0;
-                            font: exo2bold"
-                            
-                            position="0.038 .08 0">
+                            font: roboto"
+                            scale=".5 .5 .5"
+                            position="0.038 .06 0">
                     </a-entity>
                     <a-entity id="letterP" text="
                             value: P;
                             align: center;
                             anchor: center;
                             font: roboto;
-                            color: white"
+                            color:#4F3266"
                         position="0 0 0">
                     </a-entity>
                     <a-entity 
