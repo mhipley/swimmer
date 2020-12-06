@@ -1,27 +1,14 @@
-// Test code for swimmer experience
-var w = window.innerWidth;
-var h = window.innerHeight;
-// var decayTimeout;
 
-// tap time starters
-var startTime;
-var beatTimes;
-var xsum, xxsum, ysum, yysum, xysum;
-var periodprev, aprev, bprev;
-var isDone;
-var tempo;
-let swimBpm = 80;
-var minBpm = 20;
-var maxBpm = 150;
-var scaledBpm;
-let bg;
+////
+// TONE JS SETUP
+////
+
+var startBpm = 60;
 let waveVol = -20;
 let harmonicVol = -25;
 let synthVol = -5;
 let chordVol = -20;
 let drumVol = -10;
-let swimDistance = 0;
-let swimHeight = 0;
 
 var bassLine = [
 	'D#2','D#2','D#2','D#2','D#2','D#2','D2','D2',
@@ -45,15 +32,6 @@ var chordProgression = [
 var highLine = ['F#5', 'G5', 'D5'];
 var lowLine = ['D4', 'D4', 'D4', null,'D4', 'D4', 'D4', null];
 
-
-function setup() {
-}
-
-function draw() {	
-}
-
-// wave synth
-
 const waveSample = new Tone.Player({
 	"url" : "samples/tremendously-thick-layer.wav",
 	"autostart" : true,
@@ -68,113 +46,8 @@ const harmonicSample = new Tone.Player({
 }).toDestination();
 harmonicSample.volume.value = harmonicVol;
 
-
-////
-
-// get the user input via key, and set values for the move object
-
-function keyPressed() {
-	
-	let keyIndex = -1;
-	let move = [];
-	if (key >= 'a' && key <= 'z') {
-		keyIndex = key.charCodeAt(0) - 'a'.charCodeAt(0);
-	}
-    if (keyIndex === -1) {
-		// not a letter
-    } else {
-        if (key === 'd') {
-			move = {
-				"side":"left",
-				"type":"stroke"
-			};
-			
-			var now = Tone.now();
-			doBeat();
-
-			
-        }
-        else if (key === 'q') {
-			
-			move = {
-					"side":"left",
-					"type":"breath"
-				};
-        }
-        else if (key === 'k') {
-			doBeat();
-			move = {
-				"side":"right",
-				"type":"stroke"
-			};
-			// rightSeq.stop();
-			// rightSeq.start();
-        }
-        else if (key === 'p') {
-			
-			move = {
-					"side":"right",
-					"type":"breath"
-				};
-			
-		}
-		else {
-			// not a control letter
-		}
-		return move;
-	}
-
-	const decayTimeout = setInterval(function() {
-		decayTempo();
-	}, 1000);
-	 
-	clearInterval(decayTimeout);
-
-	// if(decayTimeout) {
-	// 	clearTimeout(decayTimeout);
-	// 	decayTimeout = null;
-	// }
-	// decayTimeout = setInterval(decayTempo, 1000);
-	
-}
-
-////
-
-// automatically reduce tempo over time if no breath 
-function decayTempo() {
-	
-	if (swimBpm >= 30) {
-		swimBpm -= 10;
-	}
-	else {
-		swimBpm = 20;
-	}
-	Tone.Transport.bpm.rampTo(swimBpm, '1m');
-	
-}
-////
-
-// synth setup & related functions
-
-initTempo();
-
-Tone.Transport.bpm.value = swimBpm;
+Tone.Transport.bpm.value = startBpm;
 Tone.Transport.timeSignature = 4;
-
-const drumSampler = new Tone.Sampler(
-	{
-	  A1: "samples/lotabla.wav"
-	},
-	{
-	  onload: () => {
-		document.querySelector("button").removeAttribute("disabled");
-	  }
-	}
-  ).toDestination();
-drumSampler.volume.value = drumVol;
-Tone.Transport.scheduleRepeat(time => {
-	drumSampler.triggerAttack("A1").triggerRelease(time + "1m");
-}, "1m");
 
 const bassSynth = new Tone.Synth().toDestination();
 bassSynth.volume.value = synthVol;
@@ -213,73 +86,12 @@ const chordSeq = new Tone.Sequence(
 	'1m'
   ).start(0)
 
+
 function startSwim() {
+	Tone.start();
 	Tone.Transport.start();
 }
 
-function initTempo() {
-
-	startTime = null;
-	beatTimes = [];
-	xsum  = 0;
-	xxsum = 0;
-	ysum  = 0;
-	yysum = 0;
-	xysum = 0;
-	isDone = false;
-	
-}
-
-function doBeat() {
-	
-	if (!isDone)
-		countBeat(Date.now());
-	return true;
-	
-}
-
-function countBeat(currTime) {
-	// Coordinates for linear regression
-	if (startTime === null)
-		startTime = currTime;
-	var x = beatTimes.length;
-	var y = currTime - startTime;
-	
-	// Add beat
-	beatTimes.push(y);
-	var beatCount = beatTimes.length;
-	
-	// Regression cumulative variables
-	xsum  += x;
-	xxsum += x * x;
-	ysum  += y;
-	yysum += y * y;
-	xysum += x * y;
-	
-	tempo = 60000 * x / y;
-
-	if (tempo <= 20 || isNaN(tempo)) {
-		tempo = 20;
-		swimBpm = 20;
-	}
-	else if (tempo >= maxBpm) {
-		tempo = maxBpm;
-		swimBpm = maxBpm;
-	}
-	else {
-		swimBpm = tempo;
-	}
-
-	Tone.Transport.bpm.rampTo(swimBpm, '1m');
-	
-
-}
-
-function doneBeat() {
-	isDone = true;
-
-}
-////
 
 
 ////
@@ -294,7 +106,7 @@ AFRAME.registerComponent('env-controls', {
 	},
 
 	scaleValue: function(inputZ, xMin, xMax) {
-		percent = (inputZ - 100) / (-30 - 100);
+		percent = (inputZ - 100) / (-50 - 100);
 		outputX = percent * (xMax - xMin) + xMin;
 		return outputX;
 	},
@@ -401,13 +213,69 @@ AFRAME.registerComponent('swim-controls', {
        	return this.keyPressedSet.has(keyName);
 	},
 
+	addBeat: function(time) {
+		if (!this.isDone)
+			this.countBeat(time);
+		return true;
+	},
+	countBeat: function(time) {
+		if (this.last10beats.length >= 10) {
+			this.last10beats.shift();
+			
+			
+		}
+		
+		// var x = this.last10beats.length;
+		// var y = time - this.last10beats[0];
+		this.last10beats.push(time);
+
+		var arr = this.last10beats;
+		console.log(arr);
+
+		var result = arr.reduce(function(acc, element, index, array) {
+			acc.sum += element - acc.prev;
+			index && acc.array.push((element - acc.prev).toFixed(3));
+			acc.prev = element;
+			return acc;
+		}, {array:[], sum: 0, prev: arr[0]});
+		
+		console.log(result);
+	
+		var avgMs = (result.sum / result.array.length).toFixed(0);
+		console.log("Average ms: " + avgMs);
+		var swimBpm = 120000/avgMs;
+		console.log("Current bpm: " + swimBpm);
+
+		if (swimBpm <= this.minBpm || isNaN(swimBpm)) {
+			this.swimBpm = this.minBpm;
+		}
+		else if (swimBpm >= this.maxBpm) {
+			this.swimBpm = this.maxBpm;
+		}
+		else {
+			this.swimBpm = swimBpm;
+		}
+
+		Tone.Transport.bpm.rampTo(this.swimBpm, '1m');
+		   
+
+	},
+	beatDone: function() {
+		this.isDone = true;
+	},
+
 
 	init: function () {
 
 
 		this.keyPressedSet = new Set();
+		this.last10beats = [0];
+		this.isDone = false;
 		this.hasStarted = false;
 		this.lastKeypress = null;
+		this.swimBpm = 60;
+		this.minBpm = 40;
+		this.maxBpm = 200;
 
 
 		let self = this;
@@ -417,7 +285,7 @@ AFRAME.registerComponent('swim-controls', {
 			{ 
 				self.registerKeyDown( self.convertKeyName(eventData.key) );
 				self.lastKeypress = eventData.timeStamp;
-				
+	
 				
 			}
 		);
@@ -512,12 +380,14 @@ AFRAME.registerComponent('swim-controls', {
 						self.el.children.guide.children.rightControls.children.kKey.setAttribute('material', 'src: #key; transparent: false; alphaTest: .5; color: #4F3266;');
 	
 						self.el.children.guide.children.rightControls.children.kKey.children.kGuide.setAttribute('text', 'opacity:0');
+						self.addBeat(eventData.timeStamp);
 					}
 					//68 = d
 					if (eventData.keyCode === 68) {
 	
 						self.el.children.guide.children.leftControls.children.dKey.setAttribute('material', 'src: #key; transparent: false; alphaTest: .5; color: #4F3266;');
 						self.el.children.guide.children.leftControls.children.dKey.children.dGuide.setAttribute('text', 'opacity:0');
+						self.addBeat(eventData.timeStamp);
 					
 					}				
 	
@@ -526,8 +396,8 @@ AFRAME.registerComponent('swim-controls', {
 						self.el.children.guide.children.leftControls.children.qKey.setAttribute('material', 'src: #key; transparent: false; alphaTest: .5; color: #4F3266;');
 						self.el.children.guide.children.leftControls.
 						children.qKey.children.qGuide.setAttribute('text', 'opacity:0');
-						var animeString = 'property: rotation; to: 0 15 -5; dur: 500; easing: linear; loop: 2; dir: alternate';
-	
+						var animeString = 'property: rotation; to: 0 15 -5; dur: 400; easing: linear; loop: 2; dir: alternate';
+						self.addBeat(eventData.timeStamp);
 						
 					}
 	
@@ -536,7 +406,8 @@ AFRAME.registerComponent('swim-controls', {
 						self.el.children.guide.children.rightControls.children.pKey.setAttribute('material', 'src: #key; transparent: false; alphaTest: .5; color: #4F3266;');
 	
 						self.el.children.guide.children.rightControls.children.pKey.children.pGuide.setAttribute('text', 'opacity:0');
-						var animeString = 'property: rotation; to: 0 -15 5; dur: 500; easing: linear; loop: 2; dir: alternate';
+						var animeString = 'property: rotation; to: 0 -15 5; dur: 400; easing: linear; loop: 2; dir: alternate';
+						self.addBeat(eventData.timeStamp);
 					}
 	
 	
