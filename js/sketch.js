@@ -293,8 +293,8 @@ AFRAME.registerComponent('env-controls', {
 
 	},
 
-	scaleValue: function(inputZ, zMin, zMax, xMin, xMax) {
-		percent = (inputZ - zMin) / (zMax - zMin);
+	scaleValue: function(inputZ, xMin, xMax) {
+		percent = (inputZ - 100) / (-30 - 100);
 		outputX = percent * (xMax - xMin) + xMin;
 		return outputX;
 	},
@@ -313,6 +313,19 @@ AFRAME.registerComponent('env-controls', {
 		let waves = this.el.children.waves;
 		let sky = this.el.children.sky;
 		let sun = this.el.children.sun;
+		let ambient = this.el.children.ambient;
+		let sunLight = sun.children.sunLight;
+		// let aStart = 30; 
+		// let aEnd = 10;
+		// let wStart = 184;
+		// let wEnd = 220;
+
+
+		// let sunStart = 0;
+		// let sunEnd = 10;
+		// let skyStart = 170;
+		// let skyEnd = 0;
+
 
 		//min = 100
 		//max = -30
@@ -322,11 +335,19 @@ AFRAME.registerComponent('env-controls', {
 
 
 		
-		skyColorChange = this.scaleValue(swimPos.z, 100, -30, 150, 255);
-		skyColor = 'rgb(255, 204, ' + Math.round(skyColorChange) + ')';
+		skyColorChange = this.scaleValue(swimPos.z, 170, 0);
+		skyColor = 'hsl(' + Math.round(skyColorChange) + ',45%,87%)';
 		sky.setAttribute('color', skyColor);
 
-		sunPosY = this.scaleValue(swimPos.z, 100, -30, 220, 100);
+		sunColorChange = this.scaleValue(swimPos.z, 0, 10);
+		sunColor = 'hsl(' + Math.round(sunColorChange) + ',100%,100%)';
+		sunLight.setAttribute('color', sunColor);
+
+		ambientColorChange = this.scaleValue(swimPos.z, 30, 10);
+		ambientColor = 'hsl(' + Math.round(ambientColorChange) + ',100%,82%)';
+		ambient.setAttribute('color', ambientColor);
+
+		sunPosY = this.scaleValue(swimPos.z, 220, 40);
 		sun.object3D.position.y = sunPosY;
 			
 
