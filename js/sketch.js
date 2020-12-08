@@ -1,12 +1,9 @@
 
 
 
-
 ////
 //A FRAME
 ////
-
-
 
 AFRAME.registerComponent('env-controls', {
 	schema: {
