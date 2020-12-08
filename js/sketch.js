@@ -275,9 +275,20 @@ AFRAME.registerComponent('swim-controls', {
 		marimbaSynth.connect(melodyFil);
 
 		// tambourine
-		const tamboSample = new Tone.Player({
-			"url" : "samples/tambourine4.wav"
+		const tamboSample = new Tone.Sampler({
+			urls: {
+				C4: "samples/tambourine4.wav"
+			}
 		}).toDestination();
+		tamboSample.volume.value = -5;
+
+		// wave drum
+		const waveDrumSample = new Tone.Sampler({
+			urls: {
+				C4: "samples/wavedrum1.wav"
+			}
+		}).toDestination();
+		waveDrumSample.volume.value = -10;
 
 		// polysynth for chords
 		const chordSynth = new Tone.PolySynth().toDestination();
@@ -340,9 +351,10 @@ AFRAME.registerComponent('swim-controls', {
 			}
 			Tone.Transport.start();
 			kickDrumSeq.start(0);
-			bassSeq.start("2m");
-			chordSeq.start("2m");
-			melodySeq.start("4m");
+			melodySeq.start("2m");
+			chordSeq.start("4m");
+			bassSeq.start("6m");
+			
 		}
 
 		let self = this;
@@ -376,7 +388,6 @@ AFRAME.registerComponent('swim-controls', {
 				var nextMeasure = numArr[0] + 1;
 				var nextStr = "" + nextMeasure + "m";
 				var stopStr = "" + nextMeasure + 1 + "m";
-				console.log(nextStr);
 
 				//toggle tutorial
 				if (eventData.keyCode === 84 ) {
@@ -404,12 +415,16 @@ AFRAME.registerComponent('swim-controls', {
 
 				}
 
+				if (eventData.keyCode === 80) {
+
+					tamboSample.triggerAttackRelease(["C4"]);
+
+				}
 				if (eventData.keyCode === 81) {
 
-					// tamboSample.start(nextStr);
-					// tamboSample.stop(stopStr);
-				}
-			
+					waveDrumSample.triggerAttackRelease(["C4"]);
+
+				}			
 			
 			});
 
@@ -467,7 +482,7 @@ AFRAME.registerComponent('swim-controls', {
 						self.el.children.guide.children.leftControls.
 						children.qKey.children.qGuide.setAttribute('text', 'opacity:0');
 						var animeString = 'property: rotation; to: 0 15 -5; dur: 400; easing: linear; loop: 2; dir: alternate';
-						self.addBeat(eventData.timeStamp);
+						// self.addBeat(eventData.timeStamp);
 
 					}
 	
@@ -476,7 +491,7 @@ AFRAME.registerComponent('swim-controls', {
 						self.el.children.guide.children.rightControls.children.pKey.setAttribute('material', 'src: #key; transparent: false; alphaTest: .5; color: #4F3266;');
 						self.el.children.guide.children.rightControls.children.pKey.children.pGuide.setAttribute('text', 'opacity:0');
 						var animeString = 'property: rotation; to: 0 -15 5; dur: 400; easing: linear; loop: 2; dir: alternate';
-						self.addBeat(eventData.timeStamp);
+						// self.addBeat(eventData.timeStamp);
 
 					}
 	
