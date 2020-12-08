@@ -24,7 +24,7 @@
 
     </div> -->
 
-    <a-scene vr-mode-ui="enabled: false" fog="type: linear; color: #AAA" >
+    <a-scene vr-mode-ui="enabled: false" fog="type: linear; color: pink; near:1" >
         <a-assets>
             <img id="key" src="img/key.png">
             <img id="banana" src="img/whale.gif">
@@ -44,8 +44,6 @@
         <!-- environment -->
     <a-entity id="env" position="0 0 0" env-controls>
 
-        <a-entity geometry="primitive:plane;width:0;height:0;" position="0 -100 96" material="shader:gif;src:#banana;repeat: 1 1;alphaTest:0.5;"></a-entity>
-
         <a-sky id="sky"  src="#sky" color="hsl(360, 100%, 80%)"></a-sky>
         <a-circle id="sun"
             radius="20"
@@ -64,42 +62,40 @@
         <a-ocean id="waves" color="hsla(217, 100%, 62%, 1)" width="100" depth="52" speed="2" density="50" position="0 0 0"></a-ocean>
 
         <a-entity id="whales">
-            <a-entity
-                geometry="primitive:plane;width:3;height:3;"
-               
-                material="shader:gif;src:#whale;alphaTest:0.5; side:double;"
-                position="-1 1 -25"
-                rotation="0 180 0"
-                sound="
-                    src: #splash;
-                    autoplay: true;
-                    loop: true;
-                    volume: .5"
-                animation="
-                    property: position;
-                    to: -2 1 -15;
-                    dur: 2300;
-                    easing: linear;
-                    loop: true;"
+            <a-entity 
+            geometry="primitive:plane;width:3;height:3;" 
+            position="-1.5 1 -19"
+            rotation="0 180 0"
+            material="shader:gif;src:#banana;repeat: 1 1;alphaTest:0.5; side: double;"
+            animation="
+                property: position;
+                to: -2.5 1 -9;
+                dur: 2300;
+                easing: linear;
+                loop: true;"
+            sound="
+                src: #splash;
+                autoplay: true;
+                loop: true;
+                volume: 1"
             ></a-entity>
-            <a-entity
-                geometry="primitive:plane;width:3;height:3;"
-                
-                material="shader:gif;src:#whale;alphaTest:0.5;"
-                position="1.5 1 -15"
-                rotation="0 0 0"
-                sound="
-                    src: #splash;
-                    autoplay: true;
-                    loop: true;
-                    volume: .5"
-                animation="
-                    property: position;
-                    to: 2.5 1 -5;
-                    dur: 2300;
-                    easing: linear;
-                    loop: true;"
+            <a-entity 
+            geometry="primitive:plane;width:3;height:3;" 
+            position="1.5 1 -18" 
+            material="shader:gif;src:#banana;repeat: 1 1;alphaTest:0.5;"
+            animation="
+                property: position;
+                to: 2.5 1 -8;
+                dur: 2300;
+                easing: linear;
+                loop: true;"
+            sound="
+                src: #splash;
+                autoplay: true;
+                loop: true;
+                volume: 1"
             ></a-entity>
+
         </a-entity>
 
         <!-- <a-ocean
@@ -124,146 +120,169 @@
                 height="1" 
                 width="1" 
                 rotation="0 0 -180" 
-                position="-2 -2 -8"
+                position="-4 -2 -25"
                 sound="
                     src: #dolphinClick;
                     autoplay: true;
                     loop: true;
                     volume: .7;
                 "
-                animation="dir: alternate; property: position; to: -2 2 -2; dur: 4000; easing: easeInOutQuad; loop: true"
+                animation="dir: alternate; property: position; to: -4 2 -20; dur: 4000; easing: easeInOutQuad; loop: true"
                 animation__1="dir: normal; property: rotation; to: 0 0 180; dur: 8000; easing: linear; loop: true"
                 ></a-plane>   
-
             <a-plane 
                 material="src: #dolphin; transparent: false; alphaTest: .5; side: double;" 
                 scale="2 2 2"
                 height="1" 
                 width="1" 
-                rotation="0 165 -180" 
-                position="2 -2 0"
+                rotation="0 180 -180" 
+                position="4 -2 -25"
                 sound="
                     src: #dolphinClick;
                     autoplay: true;
                     loop: true;
                     volume: .7;
                 "
-                animation="dir: alternate; property: position; to: 2 2 0; dur: 4000; easing: easeInOutQuad; loop: true"
-                animation__1="dir: normal; property: rotation; to: 0 165 180; dur: 8000; easing: linear; loop: true"
-                ></a-plane>    
-            <a-plane 
-                material="src: #dolphin; transparent: false; alphaTest: .5; side: double;" 
-                scale="2 2 2"
-                height="1" 
-                width="1" 
-                rotation="0 0 -180" 
-                position="-1.5 -2 20"
-                sound="
-                    src: #dolphinClick;
-                    autoplay: true;
-                    loop: true;
-                    volume: .5;
-                "
-                animation="dir: alternate; property: position; to: -1.5 2 20; dur: 3000; easing: easeInOutQuad; loop: true"
-                animation__1="dir: normal; property: rotation; to: 0 0 180; dur: 6000; easing: linear; loop: true"
-                ></a-plane>    
-            <a-plane 
-                material="src: #dolphin; transparent: false; alphaTest: .5; side: double;" 
-                scale="2 2 2"
-                height="1" 
-                width="1" 
-                rotation="0 0 -180" 
-                position="-1.8 -2 20"
-                sound="
-                    src: #dolphinClick;
-                    autoplay: true;
-                    loop: true;
-                    volume: .5;
-                "
-                animation="dir: alternate; property: position; to: -1.8 2 20; dur: 3000; easing: easeInOutQuad; loop: true"
-                animation__1="dir: normal; property: rotation; to: 0 0 180; dur: 6000; easing: linear; loop: true"
+                animation="dir: alternate; property: position; to: 4 2 -20; dur: 4000; easing: easeInOutQuad; loop: true"
+                animation__1="dir: normal; property: rotation; to: 0 180 180; dur: 8000; easing: linear; loop: true"
                 ></a-plane>   
-             <a-plane 
-                material="src: #dolphin; transparent: false; alphaTest: .5; side: double;" 
-                scale="2 2 2"
-                height="1" 
-                width="1" 
-                rotation="0 165 -180" 
-                position="1 -2 50"
-                sound="
-                    src: #dolphinClick;
-                    autoplay: true;
-                    loop: true;
-                    volume: .7;
-                "
-                animation="dir: alternate; property: position; to: 1 2 50; dur: 2500; easing: easeInOutQuad; loop: true"
-                animation__1="dir: normal; property: rotation; to: 0 165 180; dur: 5000; easing: linear; loop: true"
-                ></a-plane>    
-            <a-plane 
-                material="src: #dolphin; transparent: false; alphaTest: .5; side: double;" scale="2 2 2"
-                height="1" 
-                width="1" 
-                rotation="0 0 -180" 
-                position="-6 -2 35"
-                sound="
-                    src: #dolphinClick;
-                    autoplay: true;
-                    loop: true;
-                    volume: .5;
-                "
-                animation="dir: alternate; property: position; to: -6 2 35; dur: 3000; easing: easeInOutQuad; loop: true"
-                animation__1="dir: normal; property: rotation; to: 0 0 180; dur: 6000; easing: linear; loop: true"
-                ></a-plane>  
-            <a-plane 
-                material="src: #dolphin; transparent: false; alphaTest: .5; side: double;" 
-                scale="2 2 2"
-                height="1" 
-                width="1" 
-                rotation="0 165 -180" 
-                position="4 -2 60"
-                sound="
-                    src: #dolphinClick;
-                    autoplay: true;
-                    loop: true;
-                    volume: .5;
-                "
-                animation="dir: alternate; property: position; to: 4 2 60; dur: 2000; easing: easeInOutQuad; loop: true"
-                animation__1="dir: normal; property: rotation; to: 0 165 180; dur: 4000; easing: linear; loop: true"
-                ></a-plane>                                   
-            <a-plane 
-                material="src: #dolphin; transparent: false; alphaTest: .5; side: double;" 
-                scale="2 2 2"
-                height="1" 
-                width="1" 
-                rotation="0 165 -180" 
-                position="5 -2 10"
-                sound="
-                    src: #dolphinClick;
-                    autoplay: true;
-                    loop: true;
-                    volume: .7;
-                "
-                animation="dir: alternate; property: position; to: 5 2 10; dur: 3000; easing: easeInOutQuad; loop: true"
-                animation__1="dir: normal; property: rotation; to: 0 165 180; dur: 6000; easing: linear; loop: true"
-                ></a-plane>            
+
+                <a-plane 
+                    material="src: #dolphin; transparent: false; alphaTest: .5; side: double;" 
+                    scale="2 2 2"
+                    height="1" 
+                    width="1" 
+                    rotation="0 0 -180" 
+                    position="-2 -2 6"
+                    sound="
+                        src: #dolphinClick;
+                        autoplay: true;
+                        loop: true;
+                        volume: .7;
+                    "
+                    animation="dir: alternate; property: position; to: -2 2 6; dur: 3000; easing: easeInOutQuad; loop: true"
+                    animation__1="dir: normal; property: rotation; to: 0 0 180; dur: 6000; easing: linear; loop: true"
+                    ></a-plane>   
+                <a-plane 
+                    material="src: #dolphin; transparent: false; alphaTest: .5; side: double;" 
+                    scale="2 2 2"
+                    height="1" 
+                    width="1" 
+                    rotation="0 180 -180" 
+                    position="2 -2 7"
+                    sound="
+                        src: #dolphinClick;
+                        autoplay: true;
+                        loop: true;
+                        volume: .7;
+                    "
+                    animation="dir: alternate; property: position; to: 2 2 7; dur: 3000; easing: easeInOutQuad; loop: true"
+                    animation__1="dir: normal; property: rotation; to: 0 180 180; dur: 6000; easing: linear; loop: true"
+                    ></a-plane>   
+
+                <a-plane 
+                    material="src: #dolphin; transparent: false; alphaTest: .5; side: double;" 
+                    scale="2 2 2"
+                    height="1" 
+                    width="1" 
+                    rotation="0 0 -180" 
+                    position="9 -2 26"
+                    sound="
+                        src: #dolphinClick;
+                        autoplay: true;
+                        loop: true;
+                        volume: .7;
+                    "
+                    animation="dir: alternate; property: position; to: 9 2 26; dur: 4000; easing: easeInOutQuad; loop: true"
+                    animation__1="dir: normal; property: rotation; to: 0 0 180; dur: 8000; easing: linear; loop: true"
+                    ></a-plane>  
+                <a-plane 
+                    material="src: #dolphin; transparent: false; alphaTest: .5; side: double;" 
+                    scale="2 2 2"
+                    height="1" 
+                    width="1" 
+                    rotation="0 0 -180" 
+                    position="8 -2 25"
+                    sound="
+                        src: #dolphinClick;
+                        autoplay: true;
+                        loop: true;
+                        volume: .7;
+                    "
+                    animation="dir: alternate; property: position; to: 8 2 25; dur: 2500; easing: easeInOutQuad; loop: true"
+                    animation__1="dir: normal; property: rotation; to: 0 0 180; dur: 5000; easing: linear; loop: true"
+                    ></a-plane>   
+                <a-plane 
+                    material="src: #dolphin; transparent: false; alphaTest: .5; side: double;" 
+                    scale="2 2 2"
+                    height="1" 
+                    width="1" 
+                    rotation="0 180 -180" 
+                    position="-8 -2 27"
+                    sound="
+                        src: #dolphinClick;
+                        autoplay: true;
+                        loop: true;
+                        volume: .7;
+                    "
+                    animation="dir: alternate; property: position; to: -8 2 27; dur: 2500; easing: easeInOutQuad; loop: true"
+                    animation__1="dir: normal; property: rotation; to: 0 180 180; dur: 5000; easing: linear; loop: true"
+                    ></a-plane>   
+                <a-plane 
+                    material="src: #dolphin; transparent: false; alphaTest: .5; side: double;" 
+                    scale="2 2 2"
+                    height="1" 
+                    width="1" 
+                    rotation="0 180 -180" 
+                    position="-9 -2 25"
+                    sound="
+                        src: #dolphinClick;
+                        autoplay: true;
+                        loop: true;
+                        volume: .7;
+                    "
+                    animation="dir: alternate; property: position; to: -9 2 25; dur: 2500; easing: easeInOutQuad; loop: true"
+                    animation__1="dir: normal; property: rotation; to: 0 180 180; dur: 5000; easing: linear; loop: true"
+                    ></a-plane>   
+
+                <a-plane 
+                    material="src: #dolphin; transparent: false; alphaTest: .5; side: double;" 
+                    scale="2 2 2"
+                    height="1" 
+                    width="1" 
+                    rotation="0 0 -180" 
+                    position="-5.5 -2 48"
+                    sound="
+                        src: #dolphinClick;
+                        autoplay: true;
+                        loop: true;
+                        volume: .7;
+                    "
+                    animation="dir: alternate; property: position; to: -5.5 2 48; dur: 4000; easing: easeInOutQuad; loop: true"
+                    animation__1="dir: normal; property: rotation; to: 0 0 180; dur: 8000; easing: linear; loop: true"
+                    ></a-plane>   
+                <a-plane 
+                    material="src: #dolphin; transparent: false; alphaTest: .5; side: double;" 
+                    scale="2 2 2"
+                    height="1" 
+                    width="1" 
+                    rotation="0 180 -180" 
+                    position="6 -2 48"
+                    sound="
+                        src: #dolphinClick;
+                        autoplay: true;
+                        loop: true;
+                        volume: .7;
+                    "
+                    animation="dir: alternate; property: position; to: 6 2 48; dur: 4000; easing: easeInOutQuad; loop: true"
+                    animation__1="dir: normal; property: rotation; to: 0 180 180; dur: 8000; easing: linear; loop: true"
+                    ></a-plane>   
+
         </a-entity>
         <a-entity id="fish">
 
-            <a-entity position="-2 0 90" sound="src: #splash; autoplay: true; loop: true; volume: .5;" scale="2 2 2">
-                <a-entity position="0 0 0"
-                animation="property: rotation; to: 0 360 360; dur: 3000; easing: linear; loop: true">
-                <a-plane material="src: #fish; side:double; transparent: false; alphaTest: .5;" height=".25" width=".25" rotation="0 0 0" position="0 .4 .4"></a-plane>
-                </a-entity>
-                <a-entity position=".2 0 0"
-                animation="property: rotation; to: 0 360 360; dur: 3500; easing: linear; loop: true">
-                <a-plane material="src: #fish; side:double; transparent: false; alphaTest: .5;" height=".25" width=".25" rotation="0 0 0" position="0 .4 .4"></a-plane>
-                </a-entity>
-                <a-entity position=".4 0 0"
-                animation="property: rotation; to: 0 360 360; dur: 4000; easing: linear; loop: true">
-                <a-plane material="src: #fish; side:double; transparent: false; alphaTest: .5;" height=".25" width=".25" rotation="0 0 0" position="0 .4 .4"></a-plane>
-                </a-entity>
-            </a-entity>
-            <a-entity position="-5 0 68" rotation="0 0 0" sound="src: #splash; autoplay: true; loop: true; volume: .5;" scale="2 2 2">
+
+            <a-entity position="-4 0 15" rotation="0 0 0" sound="src: #splash; autoplay: true; loop: true; volume: .5;" scale="2 2 2">
                 
                 <a-entity position="0 0 0"
                 animation="property: rotation; to: 0 360 360; dur: 3000; easing: linear; loop: true">
@@ -278,7 +297,7 @@
                 <a-plane material="src: #fish; side:double; transparent: false; alphaTest: .5;" height=".25" width=".25" rotation="0 0 0" position="0 .4 .4"></a-plane>
                 </a-entity>
             </a-entity>   
-            <a-entity id="fishGroup1" position="-1.8 0 60" rotation="0 0 0" sound="src: #splash; autoplay: true; loop: true; volume: .5;" scale="2 2 2">
+            <a-entity position="4 0 15" rotation="0 180 0" sound="src: #splash; autoplay: true; loop: true; volume: .5;" scale="2 2 2">
                 
                 <a-entity position="0 0 0"
                 animation="property: rotation; to: 0 360 360; dur: 3000; easing: linear; loop: true">
@@ -292,8 +311,8 @@
                 animation="property: rotation; to: 0 360 360; dur: 4000; easing: linear; loop: true">
                 <a-plane material="src: #fish; side:double; transparent: false; alphaTest: .5;" height=".25" width=".25" rotation="0 0 0" position="0 .4 .4"></a-plane>
                 </a-entity>
-            </a-entity>              
-            <a-entity position="4 0 40" rotation="0 180 0" sound="src: #splash; autoplay: true; loop: true; volume: .5;" scale="2 2 2">
+            </a-entity>   
+            <a-entity position="-5 0 17" rotation="0 0 0" sound="src: #splash; autoplay: true; loop: true; volume: .5;" scale="2 2 2">
                 
                 <a-entity position="0 0 0"
                 animation="property: rotation; to: 0 360 360; dur: 3000; easing: linear; loop: true">
@@ -307,8 +326,8 @@
                 animation="property: rotation; to: 0 360 360; dur: 4000; easing: linear; loop: true">
                 <a-plane material="src: #fish; side:double; transparent: false; alphaTest: .5;" height=".25" width=".25" rotation="0 0 0" position="0 .4 .4"></a-plane>
                 </a-entity>
-            </a-entity>  
-            <a-entity position="-3 -10 40" rotation="0 180 0" sound="src: #splash; autoplay: true; loop: true; volume: .5;" scale="2 2 2">
+            </a-entity>   
+            <a-entity position="5 0 17" rotation="0 180 0" sound="src: #splash; autoplay: true; loop: true; volume: .5;" scale="2 2 2">
                 
                 <a-entity position="0 0 0"
                 animation="property: rotation; to: 0 360 360; dur: 3000; easing: linear; loop: true">
@@ -322,46 +341,150 @@
                 animation="property: rotation; to: 0 360 360; dur: 4000; easing: linear; loop: true">
                 <a-plane material="src: #fish; side:double; transparent: false; alphaTest: .5;" height=".25" width=".25" rotation="0 0 0" position="0 .4 .4"></a-plane>
                 </a-entity>
-            </a-entity>    
+            </a-entity>      
+
+            <a-entity position="-4 0 36" rotation="0 0 0" sound="src: #splash; autoplay: true; loop: true; volume: .5;" scale="2 2 2">
+                
+                <a-entity position="0 0 0"
+                animation="property: rotation; to: 0 360 360; dur: 3000; easing: linear; loop: true">
+                <a-plane material="src: #fish; side:double; transparent: false; alphaTest: .5;" height=".25" width=".25" rotation="0 0 0" position="0 .4 .4"></a-plane>
+                </a-entity>
+                <a-entity position=".2 0 0"
+                animation="property: rotation; to: 0 360 360; dur: 3500; easing: linear; loop: true">
+                <a-plane material="src: #fish; side:double;  transparent: false; alphaTest: .5;" height=".25" width=".25" rotation="0 0 0" position="0 .4 .4"></a-plane>
+                </a-entity>
+                <a-entity position=".4 0 0"
+                animation="property: rotation; to: 0 360 360; dur: 4000; easing: linear; loop: true">
+                <a-plane material="src: #fish; side:double; transparent: false; alphaTest: .5;" height=".25" width=".25" rotation="0 0 0" position="0 .4 .4"></a-plane>
+                </a-entity>
+            </a-entity>   
+            <a-entity position="4 0 36" rotation="0 180 0" sound="src: #splash; autoplay: true; loop: true; volume: .5;" scale="2 2 2">
+                
+                <a-entity position="0 0 0"
+                animation="property: rotation; to: 0 360 360; dur: 3000; easing: linear; loop: true">
+                <a-plane material="src: #fish; side:double; transparent: false; alphaTest: .5;" height=".25" width=".25" rotation="0 0 0" position="0 .4 .4"></a-plane>
+                </a-entity>
+                <a-entity position=".2 0 0"
+                animation="property: rotation; to: 0 360 360; dur: 3500; easing: linear; loop: true">
+                <a-plane material="src: #fish; side:double;  transparent: false; alphaTest: .5;" height=".25" width=".25" rotation="0 0 0" position="0 .4 .4"></a-plane>
+                </a-entity>
+                <a-entity position=".4 0 0"
+                animation="property: rotation; to: 0 360 360; dur: 4000; easing: linear; loop: true">
+                <a-plane material="src: #fish; side:double; transparent: false; alphaTest: .5;" height=".25" width=".25" rotation="0 0 0" position="0 .4 .4"></a-plane>
+                </a-entity>
+            </a-entity>   
+            <a-entity position="-5 0 33" rotation="0 0 0" sound="src: #splash; autoplay: true; loop: true; volume: .5;" scale="2 2 2">
+                
+                <a-entity position="0 0 0"
+                animation="property: rotation; to: 0 360 360; dur: 3000; easing: linear; loop: true">
+                <a-plane material="src: #fish; side:double; transparent: false; alphaTest: .5;" height=".25" width=".25" rotation="0 0 0" position="0 .4 .4"></a-plane>
+                </a-entity>
+                <a-entity position=".2 0 0"
+                animation="property: rotation; to: 0 360 360; dur: 3500; easing: linear; loop: true">
+                <a-plane material="src: #fish; side:double;  transparent: false; alphaTest: .5;" height=".25" width=".25" rotation="0 0 0" position="0 .4 .4"></a-plane>
+                </a-entity>
+                <a-entity position=".4 0 0"
+                animation="property: rotation; to: 0 360 360; dur: 4000; easing: linear; loop: true">
+                <a-plane material="src: #fish; side:double; transparent: false; alphaTest: .5;" height=".25" width=".25" rotation="0 0 0" position="0 .4 .4"></a-plane>
+                </a-entity>
+            </a-entity>   
+            <a-entity position="5 0 33" rotation="0 180 0" sound="src: #splash; autoplay: true; loop: true; volume: .5;" scale="2 2 2">
+                
+                <a-entity position="0 0 0"
+                animation="property: rotation; to: 0 360 360; dur: 3000; easing: linear; loop: true">
+                <a-plane material="src: #fish; side:double; transparent: false; alphaTest: .5;" height=".25" width=".25" rotation="0 0 0" position="0 .4 .4"></a-plane>
+                </a-entity>
+                <a-entity position=".2 0 0"
+                animation="property: rotation; to: 0 360 360; dur: 3500; easing: linear; loop: true">
+                <a-plane material="src: #fish; side:double;  transparent: false; alphaTest: .5;" height=".25" width=".25" rotation="0 0 0" position="0 .4 .4"></a-plane>
+                </a-entity>
+                <a-entity position=".4 0 0"
+                animation="property: rotation; to: 0 360 360; dur: 4000; easing: linear; loop: true">
+                <a-plane material="src: #fish; side:double; transparent: false; alphaTest: .5;" height=".25" width=".25" rotation="0 0 0" position="0 .4 .4"></a-plane>
+                </a-entity>
+            </a-entity>   
+            
+            <a-entity position="-2 0 48" rotation="0 0 0" sound="src: #splash; autoplay: true; loop: true; volume: .5;" scale="2 2 2">
+                
+                <a-entity position="0 0 0"
+                animation="property: rotation; to: 0 360 360; dur: 3000; easing: linear; loop: true">
+                <a-plane material="src: #fish; side:double; transparent: false; alphaTest: .5;" height=".25" width=".25" rotation="0 0 0" position="0 .4 .4"></a-plane>
+                </a-entity>
+                <a-entity position=".2 0 0"
+                animation="property: rotation; to: 0 360 360; dur: 3500; easing: linear; loop: true">
+                <a-plane material="src: #fish; side:double;  transparent: false; alphaTest: .5;" height=".25" width=".25" rotation="0 0 0" position="0 .4 .4"></a-plane>
+                </a-entity>
+                <a-entity position=".4 0 0"
+                animation="property: rotation; to: 0 360 360; dur: 4000; easing: linear; loop: true">
+                <a-plane material="src: #fish; side:double; transparent: false; alphaTest: .5;" height=".25" width=".25" rotation="0 0 0" position="0 .4 .4"></a-plane>
+                </a-entity>
+            </a-entity>   
+            <a-entity position="2 0 48" rotation="0 180 0" sound="src: #splash; autoplay: true; loop: true; volume: .5;" scale="2 2 2">
+                
+                <a-entity position="0 0 0"
+                animation="property: rotation; to: 0 360 360; dur: 3000; easing: linear; loop: true">
+                <a-plane material="src: #fish; side:double; transparent: false; alphaTest: .5;" height=".25" width=".25" rotation="0 0 0" position="0 .4 .4"></a-plane>
+                </a-entity>
+                <a-entity position=".2 0 0"
+                animation="property: rotation; to: 0 360 360; dur: 3500; easing: linear; loop: true">
+                <a-plane material="src: #fish; side:double;  transparent: false; alphaTest: .5;" height=".25" width=".25" rotation="0 0 0" position="0 .4 .4"></a-plane>
+                </a-entity>
+                <a-entity position=".4 0 0"
+                animation="property: rotation; to: 0 360 360; dur: 4000; easing: linear; loop: true">
+                <a-plane material="src: #fish; side:double; transparent: false; alphaTest: .5;" height=".25" width=".25" rotation="0 0 0" position="0 .4 .4"></a-plane>
+                </a-entity>
+            </a-entity>               
+
         </a-entity>
 
         <a-entity id="birds">
+            <a-entity position="1 1 -4" rotation="0 0 0"
+            animation="property: rotation; to: 0 360 360; dur:6000; easing: easeInOutQuad; loop: true">
+                <a-plane material="src: #bird1; side: double; transparent: false; alphaTest: .5;" height=".25" width=".25" rotation="0 0 45" position=".5 .5 0" sound="src: #birdCall; autoplay: true; loop: true; volume: .5;"></a-plane>
+            </a-entity>    
+
+            <a-entity position="0 3 55" rotation="0 360 0"
+            animation="property: rotation; to: 0 0 0; dur: 4000; easing: easeInOutCirc; loop: true">
+                <a-plane scale="2 2 2" material="src: #bird2; side: double; transparent: false; alphaTest: .5;" height=".25" width=".25" rotation="0 0 -45" position=".5 .25 0" sound="src: #birdCall; autoplay: true; loop: true; volume: .5;"></a-plane>
+            </a-entity>     
+
+
+            <a-entity position="8 1 60" rotation="0 0 0"
+            animation="property: rotation; to: 0 360 360; dur:6000; easing: easeInOutQuad; loop: true">
+                <a-plane scale="2 2 2" material="src: #bird1; side: double; transparent: false; alphaTest: .5;" height=".25" width=".25" rotation="0 0 45" position=".5 .5 0" sound="src: #birdCall; autoplay: true; loop: true; volume: .5;"></a-plane>
+            </a-entity>  
+
+            <a-entity position="4 1 68" rotation="0 0 0"
+            animation="property: rotation; to: 0 360 360; dur:6000; easing: easeInOutQuad; loop: true">
+                <a-plane scale="2 2 2" material="src: #bird1; side: double; transparent: false; alphaTest: .5;" height=".25" width=".25" rotation="0 0 45" position=".5 .5 0" sound="src: #birdCall; autoplay: true; loop: true; volume: .5;"></a-plane>
+            </a-entity>
+
+            <a-entity position="-5 1 73" rotation="0 -180 0"
+            animation="property: rotation; to: 0 180 360; dur: 8000; easing: easeInOutCubic; loop: true">
+                <a-plane material="src: #bird3; transparent: false; alphaTest: .5;" height=".25" width=".25" rotation="0 0 180" position="0 .5 .5" sound="src: #birdCall; autoplay: true; loop: true; volume: .5;"></a-plane>
+            </a-entity>
+
+            <a-entity position="-6 1 82" rotation="0 360 0"
+            animation="property: rotation; to: 0 0 0; dur: 4000; easing: easeInOutCirc; loop: true">
+                <a-plane scale="2 2 2" material="src: #bird2; side: double; transparent: false; alphaTest: .5;" height=".25" width=".25" rotation="0 0 -45" position=".5 .25 0" sound="src: #birdCall; autoplay: true; loop: true; volume: .5;"></a-plane>
+            </a-entity>  
+
+            <a-entity position="-1 1 88" rotation="0 -180 0"
+            animation="property: rotation; to: 0 180 360; dur: 8000; easing: easeInOutCubic; loop: true">
+                <a-plane scale="2 2 2" material="src: #bird3; transparent: false; alphaTest: .5;" height=".25" width=".25" rotation="0 0 180" position="0 .5 .5" sound="src: #birdCall; autoplay: true; loop: true; volume: .5;"></a-plane>
+            </a-entity>
+
+            <a-entity position="0 1 94" rotation="0 360 0"
+            animation="property: rotation; to: 0 0 0; dur: 4000; easing: easeInOutCirc; loop: true">
+                <a-plane  scale="2 2 2" material="src: #bird2; side: double; transparent: false; alphaTest: .5;" height=".25" width=".25" rotation="0 0 -45" position=".5 .25 0" sound="src: #birdCall; autoplay: true; loop: true; volume: .5;"></a-plane>
+            </a-entity>
+
             <a-entity position="1 1 97" rotation="0 0 0" 
             animation="property: rotation; to: 0 360 360; dur:6000; easing: easeInOutQuad; loop: true">
-                <a-plane  scale="2 2 2" material="src: #bird1; side: double; transparent: false; alphaTest: .5;" height=".25" width=".25" rotation="0 0 45" position=".5 .5 0" sound="src: #birdCall; autoplay: true; loop: true;"></a-plane>
+                <a-plane  scale="2 2 2" material="src: #bird1; side: double; transparent: false; alphaTest: .5;" height=".25" width=".25" rotation="0 0 45" position=".5 .5 0" sound="src: #birdCall; autoplay: true; loop: true; volume: .5;"></a-plane>
             </a-entity>
-            <a-entity position="0 1 90" rotation="0 360 0"
-            animation="property: rotation; to: 0 0 0; dur: 4000; easing: easeInOutCirc; loop: true">
-                <a-plane  scale="2 2 2" material="src: #bird2; side: double; transparent: false; alphaTest: .5;" height=".25" width=".25" rotation="0 0 -45" position=".5 .25 0" sound="src: #birdCall; autoplay: true; loop: true;"></a-plane>
-            </a-entity>
-            <a-entity position="-1 1 80" rotation="0 -180 0"
-            animation="property: rotation; to: 0 180 360; dur: 8000; easing: easeInOutCubic; loop: true">
-                <a-plane scale="2 2 2" material="src: #bird3; transparent: false; alphaTest: .5;" height=".25" width=".25" rotation="0 0 180" position="0 .5 .5" sound="src: #birdCall; autoplay: true; loop: true;"></a-plane>
-            </a-entity>
-            <a-entity position="-5 1 65" rotation="0 -180 0"
-            animation="property: rotation; to: 0 180 360; dur: 8000; easing: easeInOutCubic; loop: true">
-                <a-plane material="src: #bird3; transparent: false; alphaTest: .5;" height=".25" width=".25" rotation="0 0 180" position="0 .5 .5" sound="src: #birdCall; autoplay: true; loop: true;"></a-plane>
-            </a-entity>
-            <a-entity position="4 1 55" rotation="0 0 0"
-            animation="property: rotation; to: 0 360 360; dur:6000; easing: easeInOutQuad; loop: true">
-                <a-plane scale="2 2 2" material="src: #bird1; side: double; transparent: false; alphaTest: .5;" height=".25" width=".25" rotation="0 0 45" position=".5 .5 0" sound="src: #birdCall; autoplay: true; loop: true;"></a-plane>
-            </a-entity>
-            <a-entity position="0 3 30" rotation="0 360 0"
-            animation="property: rotation; to: 0 0 0; dur: 4000; easing: easeInOutCirc; loop: true">
-                <a-plane scale="2 2 2" material="src: #bird2; side: double; transparent: false; alphaTest: .5;" height=".25" width=".25" rotation="0 0 -45" position=".5 .25 0" sound="src: #birdCall; autoplay: true; loop: true;"></a-plane>
-            </a-entity>     
-            <a-entity position="1 1 -5" rotation="0 0 0"
-            animation="property: rotation; to: 0 360 360; dur:6000; easing: easeInOutQuad; loop: true">
-                <a-plane material="src: #bird1; side: double; transparent: false; alphaTest: .5;" height=".25" width=".25" rotation="0 0 45" position=".5 .5 0" sound="src: #birdCall; autoplay: true; loop: true;"></a-plane>
-            </a-entity>           
-            <a-entity position="8 1 40" rotation="0 0 0"
-            animation="property: rotation; to: 0 360 360; dur:6000; easing: easeInOutQuad; loop: true">
-                <a-plane scale="2 2 2" material="src: #bird1; side: double; transparent: false; alphaTest: .5;" height=".25" width=".25" rotation="0 0 45" position=".5 .5 0" sound="src: #birdCall; autoplay: true; loop: true;"></a-plane>
-            </a-entity>  
-            <a-entity position="-6 1 72" rotation="0 360 0"
-            animation="property: rotation; to: 0 0 0; dur: 4000; easing: easeInOutCirc; loop: true">
-                <a-plane scale="2 2 2" material="src: #bird2; side: double; transparent: false; alphaTest: .5;" height=".25" width=".25" rotation="0 0 -45" position=".5 .25 0" sound="src: #birdCall; autoplay: true; loop: true;"></a-plane>
-            </a-entity>                      
+
+                    
         </a-entity>
 
 
