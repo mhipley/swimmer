@@ -164,7 +164,7 @@ AFRAME.registerComponent('swim-controls', {
 		
 	
 		var avgMs = (result.sum / result.array.length).toFixed(0);
-		var swimBpm = 120000/avgMs;
+		var swimBpm = Math.round(120000/avgMs);
 
 		if (swimBpm <= this.minBpm || isNaN(swimBpm)) {
 			this.swimBpm = this.minBpm;
