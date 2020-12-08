@@ -1,96 +1,4 @@
 
-////
-// TONE JS SETUP
-////
-
-var startBpm = 60;
-let waveVol = -20;
-let harmonicVol = -25;
-let synthVol = -5;
-let chordVol = -20;
-let drumVol = -10;
-
-var bassLine = [
-	'D#2','D#2','D#2','D#2','D#2','D#2','D2','D2',
-	'C2','C2','C2','C2','C2','C2','A#2','C3',
-	'F2','F2','F2','F2','F2','F2','C2','C2',
-	'E2','E2','E2','E2','E2','E2','E2','E2',
-	];
-
-var chordA = [
-	'C5', 'D#5', 'G5'
-]
-var chordB = [
-	'C5', 'F5', 'A5'
-]
-var chordC = [
-	'C5', 'E5', 'G5'
-]
-var chordProgression = [
-	chordA, chordA, chordB, chordC
-]
-var highLine = ['F#5', 'G5', 'D5'];
-var lowLine = ['D4', 'D4', 'D4', null,'D4', 'D4', 'D4', null];
-
-const waveSample = new Tone.Player({
-	"url" : "samples/tremendously-thick-layer.wav",
-	"autostart" : true,
-	"loop" : true
-}).toDestination();
-waveSample.volume.value = waveVol;
-
-const harmonicSample = new Tone.Player({
-	"url" : "samples/harmonic-loop-low.wav",
-	"autostart" : true,
-	"loop" : true
-}).toDestination();
-harmonicSample.volume.value = harmonicVol;
-
-Tone.Transport.bpm.value = startBpm;
-Tone.Transport.timeSignature = 4;
-
-const bassSynth = new Tone.Synth().toDestination();
-bassSynth.volume.value = synthVol;
-
-const bassSeq = new Tone.Sequence((time, note) => {
-	bassSynth.triggerAttackRelease(note, "8n", time);
-}, bassLine).start(0);
-
-const chordSynth = new Tone.PolySynth().toDestination();
-chordSynth.volume.value = chordVol;
-
-const chordSeq = new Tone.Sequence(
-	(time, note) => {
-	  const chordLookup = {
-		chordA: {
-		  notes: ['C5', 'D#5', 'G5'],
-		  time: '2m',
-		},
-		chordB: {
-		  notes: ['C5', 'F5', 'A5'],
-		  time: '1m',
-		},
-		chordC: {
-		  notes: ['C5', 'E5', 'G5'],
-		  time: '1m',
-		},
-	  }
-   
-	  chordSynth.triggerAttackRelease(
-		chordLookup[note].notes,
-		chordLookup[note].time,
-		time
-	  )
-	},
-	['chordA', null, 'chordB', 'chordC'],
-	'1m'
-  ).start(0)
-
-
-function startSwim() {
-	Tone.start();
-	Tone.Transport.start();
-}
 
 
 
@@ -106,9 +14,15 @@ AFRAME.registerComponent('env-controls', {
 	},
 
 	scaleValue: function(inputZ, xMin, xMax) {
-		percent = (inputZ - 100) / (-50 - 100);
+		percent = (inputZ - 100) / (0 - 100);
 		outputX = percent * (xMax - xMin) + xMin;
-		return outputX;
+		if (outputX >= 0) {
+			return outputX;
+		}
+		else {
+			return 0;
+		}
+		
 	},
 
 
@@ -119,6 +33,8 @@ AFRAME.registerComponent('env-controls', {
 
 
 	tick: function (time, timeDelta) {
+
+		
 		let swimmer = this.el.children.camera;
 		let swimPos = swimmer.getAttribute('position');
 		let waveDens, waveColor, skyColor, sunPosY;
@@ -145,22 +61,27 @@ AFRAME.registerComponent('env-controls', {
 		//wave min = 50
 		//wave max = 400
 
+		// ambient start intensity : 1
+		// sky start : hsl(186, 100%, 80%)
 
+		// ambient end : .75
+		// sky end: hsl(360, 100%, 80%)
 		
-		skyColorChange = this.scaleValue(swimPos.z, 170, 0);
-		skyColor = 'hsl(' + Math.round(skyColorChange) + ',45%,87%)';
+		skyColorChange = this.scaleValue(swimPos.z, 186, 360);
+		skyColor = 'hsl(' + Math.round(skyColorChange) + ',100%,80%)';
 		sky.setAttribute('color', skyColor);
 
-		sunColorChange = this.scaleValue(swimPos.z, 0, 10);
-		sunColor = 'hsl(' + Math.round(sunColorChange) + ',100%,100%)';
-		sunLight.setAttribute('color', sunColor);
+		// sunColorChange = this.scaleValue(swimPos.z, 0, 10);
+		// sunColor = 'hsl(' + Math.round(sunColorChange) + ',100%,100%)';
+		// sunLight.setAttribute('color', sunColor);
 
-		ambientColorChange = this.scaleValue(swimPos.z, 30, 10);
-		ambientColor = 'hsl(' + Math.round(ambientColorChange) + ',100%,82%)';
-		ambient.setAttribute('color', ambientColor);
-
-		sunPosY = this.scaleValue(swimPos.z, 220, 40);
+		sunPosY = this.scaleValue(swimPos.z, 220, 0);
 		sun.object3D.position.y = sunPosY;
+
+		ambientIntensity = this.scaleValue(swimPos.z, 1, .75);
+		ambient.setAttribute('intensity', ambientIntensity);
+
+
 			
 
 		// waveDens = Math.round(this.scaleValue(swimPos.z, 100, -30, 400, 50));
@@ -200,6 +121,9 @@ AFRAME.registerComponent('swim-controls', {
 		// avoid adding duplicates of keys
 		if ( !this.keyPressedSet.has(keyName) )
 			this.keyPressedSet.add(keyName);
+
+		
+
 			
 	},
 
@@ -213,24 +137,26 @@ AFRAME.registerComponent('swim-controls', {
        	return this.keyPressedSet.has(keyName);
 	},
 
+	loopCallback: function(bpm) {
+	},
+
 	addBeat: function(time) {
 		if (!this.isDone)
 			this.countBeat(time);
 		return true;
 	},
 	countBeat: function(time) {
-		if (this.last10beats.length >= 10) {
-			this.last10beats.shift();
+		if (this.lastXBeats.length >= 8) {
+			this.lastXBeats.shift();
 			
 			
 		}
 		
 		// var x = this.last10beats.length;
 		// var y = time - this.last10beats[0];
-		this.last10beats.push(time);
+		this.lastXBeats.push(time);
 
-		var arr = this.last10beats;
-		console.log(arr);
+		var arr = this.lastXBeats;
 
 		var result = arr.reduce(function(acc, element, index, array) {
 			acc.sum += element - acc.prev;
@@ -239,12 +165,9 @@ AFRAME.registerComponent('swim-controls', {
 			return acc;
 		}, {array:[], sum: 0, prev: arr[0]});
 		
-		console.log(result);
 	
 		var avgMs = (result.sum / result.array.length).toFixed(0);
-		console.log("Average ms: " + avgMs);
 		var swimBpm = 120000/avgMs;
-		console.log("Current bpm: " + swimBpm);
 
 		if (swimBpm <= this.minBpm || isNaN(swimBpm)) {
 			this.swimBpm = this.minBpm;
@@ -258,7 +181,6 @@ AFRAME.registerComponent('swim-controls', {
 
 		Tone.Transport.bpm.rampTo(this.swimBpm, '1m');
 		   
-
 	},
 	beatDone: function() {
 		this.isDone = true;
@@ -267,16 +189,192 @@ AFRAME.registerComponent('swim-controls', {
 
 	init: function () {
 
-
 		this.keyPressedSet = new Set();
-		this.last10beats = [0];
+		this.lastXBeats = [0];
 		this.isDone = false;
 		this.hasStarted = false;
 		this.lastKeypress = null;
-		this.swimBpm = 60;
-		this.minBpm = 40;
-		this.maxBpm = 200;
+		this.swimBpm = 120;
+		this.minBpm = 60;
+		this.maxBpm = 300;
 
+		////
+		// TONE JS SETUP
+		////
+
+		var startBpm = 80;
+		let waveVol = -20;
+		let harmonicVol = -25;
+		let synthVol = -5;
+		let chordVol = -20;
+		let drumVol = -10;
+		let bassVol = -20;
+		let melVol = -25;
+		let leadVol = -15;
+
+		var bassDis = new Tone.Distortion(0.8).toDestination();
+		var melodyFil = new Tone.Filter(200, "lowpass");
+
+
+		const metalSynthOptions = {
+			harmonicity: 12,
+			resonance: 800,
+			modulationIndex: 20,
+			envelope: {
+				decay: 0.4,
+			},
+			volume: -15
+		}
+
+		var melody = [
+			'A#4',  'F5', null, null,  
+			 null, ['G#5', 'F#5'], 'F5', 'C#5', 
+			'D#5', 'G#4', null,  null, 
+			null, 'C5',  ['C#5', 'C5'], 'A#4'
+		]
+
+		var bass = [
+			'C#4', 'A#3', 'A#3', 'A#3', 'A#3', 'C#4', ['C#4', 'D#4'], 'A#3',
+			'C4', 'G#3', 'G#3', 'G#3', 'G#3', 'C4', ['C4', 'D#4'], 'G#3'
+		]
+
+		var kicks = [
+			"C1", null, null, "C1", "C1", null, null, null
+		]
+
+		var chordA = [
+			'C#4', 'F4', 'A#4'
+		]
+		var chordB = [
+			'A#3', 'C#4', 'F4', 'A#4'
+		]	
+
+		const waveSample = new Tone.Player({
+			"url" : "samples/waves.wav",
+			"autostart" : true,
+			"loop" : true
+		}).toDestination();
+		waveSample.volume.value = waveVol;
+
+
+		const marimbaSynth = new Tone.Sampler({
+			urls: {
+				C4: "samples/marimba-C.wav"
+			}
+		}).toDestination();
+
+		const tamboSample = new Tone.Player({
+			"url" : "samples/tambourine4.wav"
+		}).toDestination();
+
+		Tone.Transport.bpm.value = startBpm;
+		Tone.Transport.timeSignature = 4;
+
+		const bassSynth = new Tone.Synth({
+			oscillator: {
+				type: "sawtooth"
+			},
+			// envelope: {
+			// 	"attack" : 0.1,
+			// 	"decay" : 0,
+			// 	"sustain" : 1,
+			// 	"release" : 0.2,
+			// }
+				
+		}).toDestination();
+		marimbaSynth.volume.value = bassVol;
+		marimbaSynth.connect(melodyFil);
+
+		const bassSeq = new Tone.Sequence((time, note) => {
+			marimbaSynth.triggerAttackRelease(note, "8n", time);
+		}, bass);
+
+		const melodySynth = new Tone.MonoSynth({
+			oscillator: {
+				type: "square"
+			},
+			envelope: {
+				attack: 0.1
+			},
+			filter: {
+				type: "lowpass"
+			}
+		}).toDestination();
+		melodySynth.volume.value = melVol;
+
+		const melodySeq = new Tone.Sequence((time, note) => {
+			melodySynth.triggerAttackRelease(note, "8n", time);
+		}, melody);		
+
+		const chordSynth = new Tone.PolySynth().toDestination();
+		chordSynth.volume.value = chordVol;
+
+		const drumSynthOptions = {
+			pitchDecay: 0.05,
+			octaves: 10,
+			oscillator: {
+				type: "sine"
+			},
+			envelope: {
+				attack: 0.001,
+				decay: 0.4,
+				sustain: 0.1,
+				release: 2.4,
+				attackCurve: "exponential"
+			}
+		}
+
+		const kickSynth = new Tone.MembraneSynth(drumSynthOptions).toDestination();
+		kickSynth.volume.value = drumVol;
+
+
+		const kickDrumSeq = new Tone.Sequence((time, note) => {
+			kickSynth.triggerAttackRelease(note, '10hz', time);
+		}, kicks, "8n");
+
+		const tapChord = new Tone.PolySynth().toDestination();
+		tapChord.volume.value = leadVol;
+
+		const chordSeq = new Tone.Sequence(
+			(time, note) => {
+			  const chordLookup = {
+				chordA: {
+				  notes: ['C#4', 'F4', 'A#4'],
+				  time: '2n',
+				},
+				
+				chordB: {
+					notes: ['A#3','C#4', 'F4', 'A#4'],
+					time: '2n',
+					
+				},
+				chordC: {
+				  notes: ['G#4', 'C4', 'D#4'],
+				  time: '1m',
+				},
+			  }
+		
+			  chordSynth.triggerAttackRelease(
+				chordLookup[note].notes,
+				chordLookup[note].time,
+				time
+			  )
+			},
+			['chordA', 'chordB', 'chordC', null],
+			'2n'
+		  );
+
+		function startSwim() {
+			if (Tone.context.state !== 'running') {
+				Tone.context.resume();
+			}
+			Tone.Transport.start();
+			var now = Tone.now();
+			kickDrumSeq.start(0);
+			bassSeq.start("2m");
+			chordSeq.start("2m");
+			melodySeq.start("4m");
+		}
 
 		let self = this;
 
@@ -317,6 +415,15 @@ AFRAME.registerComponent('swim-controls', {
 		document.addEventListener( "keydown", 
 		function(eventData) 
 			{ 
+				console.log(Tone.Transport.position);
+				var tPos = Tone.Transport.position;
+				var tArr = tPos.split(":");
+				var numArr = tArr.map(Number);
+				var nextMeasure = numArr[0] + 1;
+				var nextStr = "" + nextMeasure + "m";
+				var stopStr = "" + nextMeasure + 1 + "m";
+				console.log(nextStr);
+
 				//toggle tutorial
 				if (eventData.keyCode === 84 ) {
 					if (self.el.children.guide.getAttribute('visible') === true) {
@@ -343,6 +450,11 @@ AFRAME.registerComponent('swim-controls', {
 
 				}
 
+				if (eventData.keyCode === 81) {
+
+					// tamboSample.start(nextStr);
+					// tamboSample.stop(stopStr);
+				}
 				
 
 			
@@ -356,11 +468,12 @@ AFRAME.registerComponent('swim-controls', {
 
 				self.movePercent.set(0,0,0);
 				let currentPos = self.el.object3D.position;
+				console.log(currentPos);
 
 				if (self.hasStarted === true)
 				{
 
-					if (currentPos.z >= -55) {
+					if (currentPos.z >= 0) {
 								
 						if (eventData.keyCode === 75 | eventData.keyCode === 68) {
 							self.moveVector.z -= 2;
@@ -381,6 +494,7 @@ AFRAME.registerComponent('swim-controls', {
 	
 						self.el.children.guide.children.rightControls.children.kKey.children.kGuide.setAttribute('text', 'opacity:0');
 						self.addBeat(eventData.timeStamp);
+
 					}
 					//68 = d
 					if (eventData.keyCode === 68) {
@@ -388,6 +502,7 @@ AFRAME.registerComponent('swim-controls', {
 						self.el.children.guide.children.leftControls.children.dKey.setAttribute('material', 'src: #key; transparent: false; alphaTest: .5; color: #4F3266;');
 						self.el.children.guide.children.leftControls.children.dKey.children.dGuide.setAttribute('text', 'opacity:0');
 						self.addBeat(eventData.timeStamp);
+
 					
 					}				
 	
@@ -398,6 +513,7 @@ AFRAME.registerComponent('swim-controls', {
 						children.qKey.children.qGuide.setAttribute('text', 'opacity:0');
 						var animeString = 'property: rotation; to: 0 15 -5; dur: 400; easing: linear; loop: 2; dir: alternate';
 						self.addBeat(eventData.timeStamp);
+
 						
 					}
 	
@@ -408,6 +524,7 @@ AFRAME.registerComponent('swim-controls', {
 						self.el.children.guide.children.rightControls.children.pKey.children.pGuide.setAttribute('text', 'opacity:0');
 						var animeString = 'property: rotation; to: 0 -15 5; dur: 400; easing: linear; loop: 2; dir: alternate';
 						self.addBeat(eventData.timeStamp);
+
 					}
 	
 	
@@ -427,7 +544,6 @@ AFRAME.registerComponent('swim-controls', {
 
 	tick: function (time, timeDelta) 
 	{
-
 		let moveAmount = (timeDelta/1000) * this.data.moveSpeed;
 		// need to convert angle measures from degrees to radians
 		let turnAmount = (timeDelta/1000) * THREE.Math.degToRad(this.data.turnSpeed);
@@ -460,8 +576,7 @@ AFRAME.registerComponent('swim-controls', {
 		// multiply each by (maximum) movement amount and percentages (how much to move in that direction)
 		let currentPos = this.el.object3D.position;
 
-
-		if (currentPos.z <= 98 && currentPos.z >= -40) {
+		if (currentPos.z <= 98 && currentPos.z > 0) {
 			if ((time - this.lastKeypress) >= 500){
 				this.movePercent.z -= 2;
 			}
@@ -470,7 +585,7 @@ AFRAME.registerComponent('swim-controls', {
 			}
 			
 		}
-		else if(currentPos.z <= -30)
+		else if(currentPos.z <= 0)
 		{
 			if ((time - this.lastKeypress) >= 2000){
 				this.movePercent.z -= 2;
@@ -483,9 +598,22 @@ AFRAME.registerComponent('swim-controls', {
 
 			this.movePercent.z += 0;
 		}
+
+		//ramp down tempo since last keypress
+		if ((time - this.lastKeypress) >= 500){
+
+
+			if (this.swimBpm <= this.minBpm) {
+				this.swimBpm = this.minBpm;
+			}
+			else if (this.swimBpm >= this.minBpm) {
+			
+				this.swimBpm -= 1;
+			}
+
+			Tone.Transport.bpm.rampTo(this.swimBpm, '1n');
+		}
 		
-
-
 
 
 		this.moveVector.set( -s * this.movePercent.z + c * this.movePercent.x,
@@ -497,26 +625,26 @@ AFRAME.registerComponent('swim-controls', {
 		// make active key yellow 
 
 		if (this.isKeyPressed(this.data.pKey)) {
-			this.el.children.guide.children.rightControls.children.pKey.setAttribute('material', 'src: #key; transparent: false; alphaTest: .5; color:#F2FD00;');
+			this.el.children.guide.children.rightControls.children.pKey.setAttribute('material', 'src: #key; transparent: false; alphaTest: .5; color:#FFF;');
 
 			this.el.children.guide.children.rightControls.children.pKey.children.pGuide.setAttribute('text', 'opacity: 1');
 
 		}
 			
 		if (this.isKeyPressed(this.data.qKey)) {
-			this.el.children.guide.children.leftControls.children.qKey.setAttribute('material', 'src: #key; transparent: false; alphaTest: .5; color:#F2FD00;');
+			this.el.children.guide.children.leftControls.children.qKey.setAttribute('material', 'src: #key; transparent: false; alphaTest: .5; color:#FFF;');
 
 			this.el.children.guide.children.leftControls.children.qKey.children.qGuide.setAttribute('text', 'opacity: 1');
 		}
 
 		if (this.isKeyPressed(this.data.dKey)) {
-			this.el.children.guide.children.leftControls.children.dKey.setAttribute('material', 'src: #key; transparent: false; alphaTest: .5; color:#F2FD00;');
+			this.el.children.guide.children.leftControls.children.dKey.setAttribute('material', 'src: #key; transparent: false; alphaTest: .5; color:#FFF;');
 
 			this.el.children.guide.children.leftControls.children.dKey.children.dGuide.setAttribute('text', 'opacity: 1');
 		}
 
 		if (this.isKeyPressed(this.data.kKey)) {
-			this.el.children.guide.children.rightControls.children.kKey.setAttribute('material', 'src: #key; transparent: false; alphaTest: .5; color:#F2FD00;');
+			this.el.children.guide.children.rightControls.children.kKey.setAttribute('material', 'src: #key; transparent: false; alphaTest: .5; color:#FFF;');
 
 			this.el.children.guide.children.rightControls.children.kKey.children.kGuide.setAttribute('text', 'opacity: 1');
 		}		
