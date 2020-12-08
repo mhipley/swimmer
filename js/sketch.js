@@ -190,7 +190,7 @@ AFRAME.registerComponent('swim-controls', {
 		this.isDone = false;
 		this.hasStarted = false;
 		this.lastKeypress = null;
-		this.swimBpm = 120;
+		this.swimBpm = 60;
 		this.minBpm = 60;
 		this.maxBpm = 300;
 
@@ -566,6 +566,8 @@ AFRAME.registerComponent('swim-controls', {
 		let currentPos = this.el.object3D.position;
 
 		console.log(currentPos);
+		console.log(this.swimBpm);
+		console.log(this.swimBpm);
 
 		// decay position if idle over a threshold
 		if (currentPos.z <= 98 && currentPos.z > 0) {

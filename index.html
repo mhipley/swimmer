@@ -12,19 +12,19 @@
     <meta name="twitter:description" content="tap-a-lap-splash! is a rhythmic meditation for swimmers and the people who love them, made with A-Frame and Tone.js">
     <meta name="twitter:creator" content="@everyartisugly">
 
-    <meta name="twitter:image" content="img/social.jpg">
+    <meta name="twitter:image" content="https://tapalapsplash.everyoneisugly.com/img/social.jpg">
 
 
     <meta property="og:title" content="tap-a-lap-splash!" />
     <title>tap-a-lap-splash!</title>
     <meta property="og:type" content="profile" />
     <meta property="og:url" content="https://tapalapsplash.everyoneisugly.com/" />
-    <meta property="og:image" content="img/social.jpg" />
+    <meta property="og:image" content="https://tapalapsplash.everyoneisugly.com/img/social.jpg" />
     <meta property="og:description" content="tap-a-lap-splash! is a rhythmic meditation for swimmers and the people who love them, made with A-Frame and Tone.js" />
     <meta property="og:site_name" content="tap-a-lap-splash!" />
 
 
-    <script src="js/libraries/Tone.js"></script>
+    <script src="https://unpkg.com/tone@14.7.33/build/Tone.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@tonaljs/tonal/browser/tonal.min.js"></script>
     <script src="js/utils/theoryHelper.js"></script>
     <script src="https://aframe.io/releases/1.0.4/aframe.min.js"></script>
@@ -36,12 +36,7 @@
     
 </head>
 <body>
-<!-- 
-    <div id="overlay">
-        <p>Sorry! Tap-a-lap-splash is only available for desktop play. Please check back soon for a mobile-friendly update or visit this url on a laptop or desktop computer.</p>
-        <img src="img/laptop.svg">
 
-    </div> -->
 
     <a-scene vr-mode-ui="enabled: false" fog="type: linear; color: pink; near:1" >
         <a-assets>
@@ -520,7 +515,7 @@
 
 
         <a-entity id="camera" camera="" position="0 .35 98" 
-        swim-controls look-controls>
+        swim-controls look-controls="enabled: false;">
        
             <a-entity id="titleCard" position="0 0 0" visible="true">
                 <a-entity 
@@ -882,12 +877,7 @@
       </a-entity>
       <!-- entities -->
     </a-scene>
-<<<<<<< HEAD
 </body>
 
 
 </html>
-=======
-  </body>
-</html>
->>>>>>> e44fbddf2f90b6f6ede2a69eb647b21d51b9223e
