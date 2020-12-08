@@ -27,6 +27,7 @@
     <a-scene vr-mode-ui="enabled: false" fog="type: linear; color: #AAA" >
         <a-assets>
             <img id="key" src="img/key.png">
+            <img id="banana" src="img/whale.gif">
             <img id="space" src="img/space-bar.png">
             <img id="bird1" src="img/bird-1.png" >
             <img id="bird2" src="img/bird-2.png" >
@@ -34,7 +35,7 @@
             <img id="dolphin" src="img/dolphin.png" >
             <img id="fish" src="img/fish.png" >
             <img id="sky" src="img/sky-base.png">
-            <img id="whale" src="img/whale.gif">
+            <img id="whale" src="img/banana2.gif">
             <audio id="dolphinClick" src="samples/dolphins-underwater.wav"></audio>
             <audio id="birdCall" src="samples/gull.wav"></audio>
             <audio id="splash" src="samples/watersplursh.wav"></audio>
@@ -42,6 +43,9 @@
 
         <!-- environment -->
     <a-entity id="env" position="0 0 0" env-controls>
+
+        <a-entity geometry="primitive:plane;width:0;height:0;" position="0 -100 96" material="shader:gif;src:#banana;repeat: 1 1;alphaTest:0.5;"></a-entity>
+
         <a-sky id="sky"  src="#sky" color="hsl(360, 100%, 80%)"></a-sky>
         <a-circle id="sun"
             radius="20"
