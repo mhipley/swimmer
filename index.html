@@ -27,7 +27,7 @@
     <a-scene vr-mode-ui="enabled: false" fog="type: linear; color: pink; near:1" >
         <a-assets>
             <img id="key" src="img/key.png">
-            <img id="banana" src="img/whale.gif">
+            <img id="banana" src="img/banana.gif">
             <img id="space" src="img/space-bar.png">
             <img id="bird1" src="img/bird-1.png" >
             <img id="bird2" src="img/bird-2.png" >
@@ -35,7 +35,7 @@
             <img id="dolphin" src="img/dolphin.png" >
             <img id="fish" src="img/fish.png" >
             <img id="sky" src="img/sky-base.png">
-            <img id="whale" src="img/banana2.gif">
+            <img id="whale" src="img/whale.gif">
             <audio id="dolphinClick" src="samples/dolphins-underwater.wav"></audio>
             <audio id="birdCall" src="samples/gull.wav"></audio>
             <audio id="birdCall2" src="samples/birds.wav"></audio>
@@ -61,13 +61,19 @@
         <a-ocean id="waves" color="hsla(217, 100%, 62%, 1)" width="100" depth="52" speed="2" density="300" position="0 0 100"></a-ocean>
         <a-ocean id="waves" color="hsla(217, 100%, 62%, 1)" width="100" depth="52" speed="2" density="100" position="0 0 50"></a-ocean>
         <a-ocean id="waves" color="hsla(217, 100%, 62%, 1)" width="100" depth="52" speed="2" density="50" position="0 0 0"></a-ocean>
+        <a-entity geometry="primitive:plane;width:2;height:2;" position="0 0 96" material="shader:gif;src:#banana;alphaTest:0.5;" visible="false"></a-entity>
 
         <a-entity id="whales">
             <a-entity 
             geometry="primitive:plane;width:3;height:3;" 
             position="-1.5 1 -19"
             rotation="0 180 0"
-            material="shader:gif;src:#banana;repeat: 1 1;alphaTest:0.5; side: double;"
+            material="
+                shader:gif;
+                src:#whale;
+                repeat: 1 1;
+                alphaTest:0.5; 
+                side: double;"
             animation="
                 property: position;
                 to: -2.5 1 -9;
@@ -83,7 +89,11 @@
             <a-entity 
             geometry="primitive:plane;width:3;height:3;" 
             position="1.5 1 -18" 
-            material="shader:gif;src:#banana;repeat: 1 1;alphaTest:0.5;"
+            material="
+                shader:gif;
+                src:#whale;
+                repeat: 1 1;
+                alphaTest:0.5;"
             animation="
                 property: position;
                 to: 2.5 1 -8;

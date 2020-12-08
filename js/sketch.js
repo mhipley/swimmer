@@ -565,6 +565,8 @@ AFRAME.registerComponent('swim-controls', {
 		// multiply each by (maximum) movement amount and percentages (how much to move in that direction)
 		let currentPos = this.el.object3D.position;
 
+		console.log(currentPos);
+
 		// decay position if idle over a threshold
 		if (currentPos.z <= 98 && currentPos.z > 0) {
 			if ((time - this.lastKeypress) >= 500){
