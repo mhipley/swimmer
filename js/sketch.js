@@ -186,7 +186,6 @@ AFRAME.registerComponent('swim-controls', {
 		this.isDone = true;
 	},
 
-
 	init: function () {
 
 		this.keyPressedSet = new Set();
@@ -204,27 +203,13 @@ AFRAME.registerComponent('swim-controls', {
 
 		var startBpm = 80;
 		let waveVol = -20;
-		let harmonicVol = -25;
-		let synthVol = -5;
 		let chordVol = -20;
 		let drumVol = -10;
 		let bassVol = -20;
 		let melVol = -25;
 		let leadVol = -15;
 
-		var bassDis = new Tone.Distortion(0.8).toDestination();
-		var melodyFil = new Tone.Filter(200, "lowpass");
-
-
-		const metalSynthOptions = {
-			harmonicity: 12,
-			resonance: 800,
-			modulationIndex: 20,
-			envelope: {
-				decay: 0.4,
-			},
-			volume: -15
-		}
+		// sequence notation
 
 		var melody = [
 			'A#4',  'F5', null, null,  
@@ -242,72 +227,7 @@ AFRAME.registerComponent('swim-controls', {
 			"C1", null, null, "C1", "C1", null, null, null
 		]
 
-		var chordA = [
-			'C#4', 'F4', 'A#4'
-		]
-		var chordB = [
-			'A#3', 'C#4', 'F4', 'A#4'
-		]	
-
-		const waveSample = new Tone.Player({
-			"url" : "samples/waves.wav",
-			"autostart" : true,
-			"loop" : true
-		}).toDestination();
-		waveSample.volume.value = waveVol;
-
-
-		const marimbaSynth = new Tone.Sampler({
-			urls: {
-				C4: "samples/marimba-C.wav"
-			}
-		}).toDestination();
-
-		const tamboSample = new Tone.Player({
-			"url" : "samples/tambourine4.wav"
-		}).toDestination();
-
-		Tone.Transport.bpm.value = startBpm;
-		Tone.Transport.timeSignature = 4;
-
-		const bassSynth = new Tone.Synth({
-			oscillator: {
-				type: "sawtooth"
-			},
-			// envelope: {
-			// 	"attack" : 0.1,
-			// 	"decay" : 0,
-			// 	"sustain" : 1,
-			// 	"release" : 0.2,
-			// }
-				
-		}).toDestination();
-		marimbaSynth.volume.value = bassVol;
-		marimbaSynth.connect(melodyFil);
-
-		const bassSeq = new Tone.Sequence((time, note) => {
-			marimbaSynth.triggerAttackRelease(note, "8n", time);
-		}, bass);
-
-		const melodySynth = new Tone.MonoSynth({
-			oscillator: {
-				type: "square"
-			},
-			envelope: {
-				attack: 0.1
-			},
-			filter: {
-				type: "lowpass"
-			}
-		}).toDestination();
-		melodySynth.volume.value = melVol;
-
-		const melodySeq = new Tone.Sequence((time, note) => {
-			melodySynth.triggerAttackRelease(note, "8n", time);
-		}, melody);		
-
-		const chordSynth = new Tone.PolySynth().toDestination();
-		chordSynth.volume.value = chordVol;
+		// options and effects
 
 		const drumSynthOptions = {
 			pitchDecay: 0.05,
@@ -324,16 +244,63 @@ AFRAME.registerComponent('swim-controls', {
 			}
 		}
 
+		var melodyFil = new Tone.Filter(200, "lowpass");
+
+		// background waves
+		const waveSample = new Tone.Player({
+			"url" : "samples/waves.wav",
+			"autostart" : true,
+			"loop" : true
+		}).toDestination();
+		waveSample.volume.value = waveVol;
+
+		// spooky synth for melody
+		const melodySynth = new Tone.MonoSynth({
+			oscillator: {
+				type: "square"
+			},
+			envelope: {
+				attack: 0.1
+			},
+			filter: {
+				type: "lowpass"
+			}
+		}).toDestination();
+		melodySynth.volume.value = melVol;
+
+		// marimba
+		const marimbaSynth = new Tone.Sampler({
+			urls: {
+				C4: "samples/marimba-C.wav"
+			}
+		}).toDestination();
+		marimbaSynth.volume.value = bassVol;
+		marimbaSynth.connect(melodyFil);
+
+		// tambourine
+		const tamboSample = new Tone.Player({
+			"url" : "samples/tambourine4.wav"
+		}).toDestination();
+
+		// polysynth for chords
+		const chordSynth = new Tone.PolySynth().toDestination();
+		chordSynth.volume.value = chordVol;
+
+		// kick drum
 		const kickSynth = new Tone.MembraneSynth(drumSynthOptions).toDestination();
 		kickSynth.volume.value = drumVol;
 
+		const melodySeq = new Tone.Sequence((time, note) => {
+			melodySynth.triggerAttackRelease(note, "8n", time);
+		}, melody);		
+
+		const bassSeq = new Tone.Sequence((time, note) => {
+			marimbaSynth.triggerAttackRelease(note, "8n", time);
+		}, bass);
 
 		const kickDrumSeq = new Tone.Sequence((time, note) => {
 			kickSynth.triggerAttackRelease(note, '10hz', time);
 		}, kicks, "8n");
-
-		const tapChord = new Tone.PolySynth().toDestination();
-		tapChord.volume.value = leadVol;
 
 		const chordSeq = new Tone.Sequence(
 			(time, note) => {
@@ -364,12 +331,17 @@ AFRAME.registerComponent('swim-controls', {
 			'2n'
 		  );
 
+
+		// initial Tone.Transport settings
+		Tone.Transport.bpm.value = startBpm;
+		Tone.Transport.timeSignature = 4;
+
+		// trigger swim 
 		function startSwim() {
 			if (Tone.context.state !== 'running') {
 				Tone.context.resume();
 			}
 			Tone.Transport.start();
-			var now = Tone.now();
 			kickDrumSeq.start(0);
 			bassSeq.start("2m");
 			chordSeq.start("2m");
@@ -378,33 +350,11 @@ AFRAME.registerComponent('swim-controls', {
 
 		let self = this;
 
-		document.addEventListener( "keydown", 
-			function(eventData) 
-			{ 
-				self.registerKeyDown( self.convertKeyName(eventData.key) );
-				self.lastKeypress = eventData.timeStamp;
-	
-				
-			}
-		);
-		
-		document.addEventListener( "keyup", 
-			function(eventData) 
-			{ 
-				self.registerKeyUp( self.convertKeyName(eventData.key) );
-			} 
-		);		
-
 		self.moveVector  = new THREE.Vector3(0,0,0);
 		self.movePercent = new THREE.Vector3(0,0,0);
-		// z = forward/backward
-		// x = left/right
-		// y = up/down
 
 		self.rotateVector  = new THREE.Vector2(0,0);
 		self.rotatePercent = new THREE.Vector2(0,0);
-		// y = turn angle
-		// x = look angle
 
 		// used as reference vector when turning
 		self.upVector = new THREE.Vector3(0,1,0);
@@ -415,6 +365,13 @@ AFRAME.registerComponent('swim-controls', {
 		document.addEventListener( "keydown", 
 		function(eventData) 
 			{ 
+
+				// register key down for highlight UI
+				self.registerKeyDown( self.convertKeyName(eventData.key) );
+				// register time of last keypress for decay
+				self.lastKeypress = eventData.timeStamp;
+
+
 				console.log(Tone.Transport.position);
 				var tPos = Tone.Transport.position;
 				var tArr = tPos.split(":");
@@ -455,8 +412,7 @@ AFRAME.registerComponent('swim-controls', {
 					// tamboSample.start(nextStr);
 					// tamboSample.stop(stopStr);
 				}
-				
-
+			
 			
 			});
 
@@ -466,9 +422,12 @@ AFRAME.registerComponent('swim-controls', {
 				
 				// self.rotatePercent.set(0,0);
 
+				// register keyup for removing UI highlight?
+				self.registerKeyUp( self.convertKeyName(eventData.key) );
+
 				self.movePercent.set(0,0,0);
 				let currentPos = self.el.object3D.position;
-				console.log(currentPos);
+				console.log("camera: " + currentPos);
 
 				if (self.hasStarted === true)
 				{
@@ -503,7 +462,6 @@ AFRAME.registerComponent('swim-controls', {
 						self.el.children.guide.children.leftControls.children.dKey.children.dGuide.setAttribute('text', 'opacity:0');
 						self.addBeat(eventData.timeStamp);
 
-					
 					}				
 	
 					//81 = q
@@ -514,28 +472,21 @@ AFRAME.registerComponent('swim-controls', {
 						var animeString = 'property: rotation; to: 0 15 -5; dur: 400; easing: linear; loop: 2; dir: alternate';
 						self.addBeat(eventData.timeStamp);
 
-						
 					}
 	
 					//80 = p
 					if (eventData.keyCode === 80) {
 						self.el.children.guide.children.rightControls.children.pKey.setAttribute('material', 'src: #key; transparent: false; alphaTest: .5; color: #4F3266;');
-	
 						self.el.children.guide.children.rightControls.children.pKey.children.pGuide.setAttribute('text', 'opacity:0');
 						var animeString = 'property: rotation; to: 0 -15 5; dur: 400; easing: linear; loop: 2; dir: alternate';
 						self.addBeat(eventData.timeStamp);
 
 					}
 	
-	
 					self.el.removeAttribute('animation');
 					self.el.setAttribute('animation', animeString);
 
-
 				}
-
-
-
 
 			} 
 		);
@@ -576,14 +527,14 @@ AFRAME.registerComponent('swim-controls', {
 		// multiply each by (maximum) movement amount and percentages (how much to move in that direction)
 		let currentPos = this.el.object3D.position;
 
+		// decay position if idle over a threshold
 		if (currentPos.z <= 98 && currentPos.z > 0) {
 			if ((time - this.lastKeypress) >= 500){
 				this.movePercent.z -= 2;
 			}
 			else {
 				this.movePercent.z += 0;
-			}
-			
+			}		
 		}
 		else if(currentPos.z <= 0)
 		{
@@ -595,13 +546,11 @@ AFRAME.registerComponent('swim-controls', {
 			}
 		}
 		else {
-
 			this.movePercent.z += 0;
 		}
 
-		//ramp down tempo since last keypress
+		//ramp down tempo if idle over a threshold
 		if ((time - this.lastKeypress) >= 500){
-
 
 			if (this.swimBpm <= this.minBpm) {
 				this.swimBpm = this.minBpm;
@@ -614,16 +563,15 @@ AFRAME.registerComponent('swim-controls', {
 			Tone.Transport.bpm.rampTo(this.swimBpm, '1n');
 		}
 		
-
-
+		// scale the motion
 		this.moveVector.set( -s * this.movePercent.z + c * this.movePercent.x,
 			1 * this.movePercent.y,
 		   -c * this.movePercent.z - s * this.movePercent.x ).multiplyScalar( moveAmount );
 
+		// add the new movement to the current position
 		this.el.object3D.position.add( this.moveVector );	
 		
-		// make active key yellow 
-
+		// highlight the active key
 		if (this.isKeyPressed(this.data.pKey)) {
 			this.el.children.guide.children.rightControls.children.pKey.setAttribute('material', 'src: #key; transparent: false; alphaTest: .5; color:#FFF;');
 
