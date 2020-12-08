@@ -199,11 +199,11 @@ AFRAME.registerComponent('swim-controls', {
 		////
 
 		var startBpm = 80;
-		let waveVol = -20;
-		let chordVol = -20;
+		let waveVol = -15;
+		let chordVol = -12;
 		let drumVol = -10;
-		let bassVol = -20;
-		let melVol = -25;
+		let bassVol = -15;
+		let melVol = -20;
 		let leadVol = -15;
 
 		// sequence notation
@@ -222,6 +222,10 @@ AFRAME.registerComponent('swim-controls', {
 
 		var kicks = [
 			"C1", null, null, "C1", "C1", null, null, null
+		]
+
+		var overlay = [
+			'D#3', 'G#4', 'A#4'
 		]
 
 		// options and effects
@@ -274,6 +278,23 @@ AFRAME.registerComponent('swim-controls', {
 		marimbaSynth.volume.value = bassVol;
 		marimbaSynth.connect(melodyFil);
 
+		const buzzySynth = new Tone.Synth({
+			oscillator: {
+			  type: 'sawtooth',
+		  
+			},
+			envelope: {
+			  attack: 0.1,
+			  decay: 0.5,
+			  sustain: 1,
+			  release: 0.1
+			},
+			filter: {
+				type: "lowpass"
+			}
+		  }).toDestination();
+		buzzySynth.volume.value = -18;
+
 		// tambourine
 		const tamboSample = new Tone.Sampler({
 			urls: {
@@ -305,6 +326,10 @@ AFRAME.registerComponent('swim-controls', {
 		const bassSeq = new Tone.Sequence((time, note) => {
 			marimbaSynth.triggerAttackRelease(note, "8n", time);
 		}, bass);
+
+		const buzzySeq = new Tone.Sequence((time, note) => {
+			buzzySynth.triggerAttackRelease(note, "16n", time);
+		}, overlay);
 
 		const kickDrumSeq = new Tone.Sequence((time, note) => {
 			kickSynth.triggerAttackRelease(note, '10hz', time);
@@ -351,10 +376,10 @@ AFRAME.registerComponent('swim-controls', {
 			}
 			Tone.Transport.start();
 			kickDrumSeq.start(0);
-			melodySeq.start("2m");
+			melodySeq.start("10m");
 			chordSeq.start("4m");
 			bassSeq.start("6m");
-			
+			buzzySeq.start("2m");
 		}
 
 		let self = this;
@@ -381,7 +406,6 @@ AFRAME.registerComponent('swim-controls', {
 				self.lastKeypress = eventData.timeStamp;
 
 
-				console.log(Tone.Transport.position);
 				var tPos = Tone.Transport.position;
 				var tArr = tPos.split(":");
 				var numArr = tArr.map(Number);
@@ -415,16 +439,19 @@ AFRAME.registerComponent('swim-controls', {
 
 				}
 
-				if (eventData.keyCode === 80) {
+				if (self.hasStarted === true ){
+					if (eventData.keyCode === 80) {
 
-					tamboSample.triggerAttackRelease(["C4"]);
-
+						tamboSample.triggerAttackRelease(["C4"]);
+	
+					}
+					if (eventData.keyCode === 81) {
+	
+						waveDrumSample.triggerAttackRelease(["C4"]);
+	
+					}	
 				}
-				if (eventData.keyCode === 81) {
-
-					waveDrumSample.triggerAttackRelease(["C4"]);
-
-				}			
+		
 			
 			});
 
@@ -439,7 +466,6 @@ AFRAME.registerComponent('swim-controls', {
 
 				self.movePercent.set(0,0,0);
 				let currentPos = self.el.object3D.position;
-				console.log("camera: " + currentPos);
 
 				if (self.hasStarted === true)
 				{
@@ -582,7 +608,8 @@ AFRAME.registerComponent('swim-controls', {
 
 		// add the new movement to the current position
 		this.el.object3D.position.add( this.moveVector );	
-		
+
+		if (this.hasStarted === true ){
 		// highlight the active key
 		if (this.isKeyPressed(this.data.pKey)) {
 			this.el.children.guide.children.rightControls.children.pKey.setAttribute('material', 'src: #key; transparent: false; alphaTest: .5; color:#FFF;');
@@ -607,7 +634,10 @@ AFRAME.registerComponent('swim-controls', {
 			this.el.children.guide.children.rightControls.children.kKey.setAttribute('material', 'src: #key; transparent: false; alphaTest: .5; color:#FFF;');
 
 			this.el.children.guide.children.rightControls.children.kKey.children.kGuide.setAttribute('text', 'opacity: 1');
-		}		
+		}	
+		}
+		
+	
 
 	}
 });
