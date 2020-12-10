@@ -611,6 +611,11 @@ AFRAME.registerComponent('swim-controls', {
 
 			Tone.Transport.bpm.rampTo(this.swimBpm, '1n');
 		}
+
+		// gallery mode: reset game if idle for more than 10 seconds
+		if ((time - this.lastKeypress) >= 10000 && this.hasStarted === true) {
+			location.reload();
+		}
 		
 		// scale the motion
 		this.moveVector.set( -s * this.movePercent.z + c * this.movePercent.x,
