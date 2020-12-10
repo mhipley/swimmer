@@ -565,12 +565,9 @@ AFRAME.registerComponent('swim-controls', {
 		// multiply each by (maximum) movement amount and percentages (how much to move in that direction)
 		let currentPos = this.el.object3D.position;
 
-		console.log(currentPos);
-		console.log(this.swimBpm);
-		console.log(this.swimBpm);
 
 		// decay position if idle over a threshold
-		if (currentPos.z <= 98 && currentPos.z > 0) {
+		if (currentPos.z < 98 && currentPos.z > 0) {
 			if ((time - this.lastKeypress) >= 500){
 				this.movePercent.z -= 2;
 			}
@@ -589,6 +586,7 @@ AFRAME.registerComponent('swim-controls', {
 		}
 		else {
 			this.movePercent.z += 0;
+			this.el.object3D.position.z = 98;
 		}
 
 		//ramp down tempo if idle over a threshold
