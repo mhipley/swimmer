@@ -1,10 +1,5 @@
 
-
-
-////
-//A FRAME
-////
-
+//component to control environment
 AFRAME.registerComponent('env-controls', {
 	schema: {
 
@@ -88,6 +83,7 @@ AFRAME.registerComponent('env-controls', {
 	}
 });
 
+//component for camera control
 AFRAME.registerComponent('swim-controls', {
 	schema: {
 

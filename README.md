@@ -16,6 +16,8 @@ This prototype relies on [A-Frame](https://aframe.io/) and [Tone.js](https://ton
 
 In addition to the core A-Frame library, I also made use of the [A-Frame Extras ocean component](https://github.com/n5ro/aframe-extras) and [AFrame GIF Shader](https://github.com/mayognaise/aframe-gif-shader).
 
+The title typeface is Porpora, by [Collletttivo](http://collletttivo.it/).
+
 
 
 #### Get in Touch
