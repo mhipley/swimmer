@@ -400,6 +400,7 @@ AFRAME.registerComponent('swim-controls', {
 		function(eventData) 
 			{ 
 
+
 				// register key down for highlight UI
 				self.registerKeyDown( self.convertKeyName(eventData.key) );
 				// register time of last keypress for decay
@@ -423,6 +424,12 @@ AFRAME.registerComponent('swim-controls', {
 					}
 					
 				}
+
+				if (eventData.keyCode === 82) {
+					location.reload();
+				}
+
+			
 
 				if (eventData.code === "Space") {
 					
@@ -463,6 +470,8 @@ AFRAME.registerComponent('swim-controls', {
 
 				// register keyup for removing UI highlight?
 				self.registerKeyUp( self.convertKeyName(eventData.key) );
+
+				
 
 				self.movePercent.set(0,0,0);
 				let currentPos = self.el.object3D.position;

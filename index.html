@@ -572,8 +572,8 @@
           </a-entity>
 
           <a-entity id="guide" position="0 0 0" visible="false">
-            <a-entity
-              text="
+                <a-entity
+                text="
                     value: PRESS T TO TOGGLE GUIDE;
                     color: #4F3266;
                     align: center;
@@ -581,7 +581,16 @@
                     anchor: center;"
                     scale=".5 .5 .5"
                     position="0 .3 -0.5"></a-entity>
-                <a-entity id="leftControls" position="-.5 0 0" >
+                <a-entity
+                    text="
+                        value: PRESS R TO RESET;
+                        color: #4F3266;
+                        align: center;
+                        font: roboto;
+                        anchor: center;"
+                        scale=".5 .5 .5"
+                        position="0 .27 -0.5"></a-entity>
+                <a-entity id="leftControls" position="-.3 0 0" >
                     <a-entity id="qKey"   
                         geometry="
                             primitive: plane; 
@@ -725,7 +734,7 @@
                 ></a-entity>
               </a-entity>
             </a-entity>
-            <a-entity id="rightControls" position=".3 0 0">
+            <a-entity id="rightControls" position=".1 0 0">
               <a-entity
                 id="kKey"
                 geometry="
