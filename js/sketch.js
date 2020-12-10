@@ -467,7 +467,7 @@ AFRAME.registerComponent('swim-controls', {
 				// register keyup for removing UI highlight?
 				self.registerKeyUp( self.convertKeyName(eventData.key) );
 
-				
+			
 
 				self.movePercent.set(0,0,0);
 				let currentPos = self.el.object3D.position;
@@ -477,14 +477,13 @@ AFRAME.registerComponent('swim-controls', {
 
 					if (currentPos.z >= 0) {
 								
-						if (eventData.keyCode === 75 | eventData.keyCode === 68) {
+						if (eventData.keyCode === 68 | eventData.keyCode === 75) {
 							self.moveVector.z -= 2;
 							let vectorSum = new THREE.Vector3(0,1.6,0);
 							vectorSum.addVectors(self.moveVector, self.el.object3D.position);
 							var vectorString = vectorSum.toArray().join(" ");
 							var animeString = 'property: position; to: [' + vectorString + ']';
 						}
-	
 					}
 					else {
 						self.moveVector.z = 0;
@@ -496,6 +495,7 @@ AFRAME.registerComponent('swim-controls', {
 	
 						self.el.children.guide.children.rightControls.children.kKey.children.kGuide.setAttribute('text', 'opacity:0');
 						self.addBeat(eventData.timeStamp);
+						var animeString1 = 'dir: alternate; property: rotation; to: 0 5 0; dur: 600; easing: linear; loop: 2; '; 
 
 					}
 					//68 = d
@@ -504,6 +504,7 @@ AFRAME.registerComponent('swim-controls', {
 						self.el.children.guide.children.leftControls.children.dKey.setAttribute('material', 'src: #key; transparent: false; alphaTest: .5; color: #4F3266;');
 						self.el.children.guide.children.leftControls.children.dKey.children.dGuide.setAttribute('text', 'opacity:0');
 						self.addBeat(eventData.timeStamp);
+						var animeString1 = 'dir: alternate; property: rotation; to: 0 -5 0; dur: 600; easing: linear; loop: 2; '; 
 
 					}				
 	
@@ -513,6 +514,7 @@ AFRAME.registerComponent('swim-controls', {
 						self.el.children.guide.children.leftControls.
 						children.qKey.children.qGuide.setAttribute('text', 'opacity:0');
 						var animeString = 'property: rotation; to: 0 15 -5; dur: 400; easing: linear; loop: 2; dir: alternate';
+						var animeString1 = '';
 						// self.addBeat(eventData.timeStamp);
 
 					}
@@ -522,12 +524,15 @@ AFRAME.registerComponent('swim-controls', {
 						self.el.children.guide.children.rightControls.children.pKey.setAttribute('material', 'src: #key; transparent: false; alphaTest: .5; color: #4F3266;');
 						self.el.children.guide.children.rightControls.children.pKey.children.pGuide.setAttribute('text', 'opacity:0');
 						var animeString = 'property: rotation; to: 0 -15 5; dur: 400; easing: linear; loop: 2; dir: alternate';
+						var animeString1 = '';
 						// self.addBeat(eventData.timeStamp);
 
 					}
 	
 					self.el.removeAttribute('animation');
+					self.el.removeAttribute('animation__1');
 					self.el.setAttribute('animation', animeString);
+					self.el.setAttribute('animation__1', animeString1);
 
 				}
 
