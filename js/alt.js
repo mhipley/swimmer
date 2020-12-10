@@ -1,30 +1,26 @@
 !(function (t) {
-    function e(a) {
-        if (r[a]) return r[a].exports;
-        var i = (r[a] = { exports: {}, id: a, loaded: !1 });
-        return t[a].call(i.exports, i, i.exports, e), (i.loaded = !0), i.exports;
+    function e(r) {
+        if (i[r]) return i[r].exports;
+        var a = (i[r] = { exports: {}, id: r, loaded: !1 });
+        return t[r].call(a.exports, a, a.exports, e), (a.loaded = !0), a.exports;
     }
-    var r = {};
-    return (e.m = t), (e.c = r), (e.p = ""), e(0);
+    var i = {};
+    return (e.m = t), (e.c = i), (e.p = ""), e(0);
 })([
-    function (t, e, r) {
+    function (t, e, i) {
         "use strict";
-        r(1);
-    },
-    function (t, e, r) {
-        "use strict";
-        function a(t, e) {
+        function r(t, e) {
             return { status: "error", src: e, message: t, timestamp: Date.now() };
         }
-        var i =
+        var a =
                 "function" == typeof Symbol && "symbol" == typeof Symbol.iterator
                     ? function (t) {
                           return typeof t;
                       }
                     : function (t) {
-                          return t && "function" == typeof Symbol && t.constructor === Symbol && t !== Symbol.prototype ? "symbol" : typeof t;
+                          return t && "function" == typeof Symbol && t.constructor === Symbol ? "symbol" : typeof t;
                       },
-            s = r(2);
+            s = i(1);
         if ("undefined" == typeof AFRAME) throw "Component attempted to register before AFRAME was available.";
         var n = AFRAME.utils.srcLoader.parseUrl,
             o = AFRAME.utils.debug;
@@ -43,11 +39,11 @@
                     (this.__cnv.height = 2),
                     (this.__ctx = this.__cnv.getContext("2d")),
                     (this.__texture = new THREE.Texture(this.__cnv)),
-                    t.repeat && ((this.__texture.wrapS = THREE.RepeatWrapping), (this.__texture.wrapT = THREE.RepeatWrapping), this.__texture.repeat.set(t.repeat.x, t.repeat.y)),
                     (this.__material = {}),
                     this.__reset(),
                     (this.material = new THREE.MeshBasicMaterial({ map: this.__texture })),
                     this.el.sceneEl.addBehavior(this),
+                    this.__addPublicFunctions(),
                     this.material
                 );
             },
@@ -59,9 +55,9 @@
             },
             __updateMaterial: function (t) {
                 var e = this.material,
-                    r = this.__getMaterialData(t);
-                Object.keys(r).forEach(function (t) {
-                    e[t] = r[t];
+                    i = this.__getMaterialData(t);
+                Object.keys(i).forEach(function (t) {
+                    e[t] = i[t];
                 });
             },
             __getMaterialData: function (t) {
@@ -72,15 +68,15 @@
             },
             __updateTexture: function (t) {
                 var e = t.src,
-                    r = t.autoplay;
-                "boolean" == typeof r ? (this.__autoplay = r) : "undefined" == typeof r && (this.__autoplay = !0), this.__autoplay && this.__frames && this.play(), e ? this.__validateSrc(e, this.__setTexure.bind(this)) : this.__reset();
+                    i = t.autoplay;
+                "boolean" == typeof i ? (this.__autoplay = i) : "undefined" == typeof i && (this.__autoplay = !0), this.__autoplay && this.__frames && this.play(), e ? this.__validateSrc(e, this.__setTexure.bind(this)) : this.__reset();
             },
             __validateSrc: function (t, e) {
-                var r = n(t);
-                if (r) return void this.__getImageSrc(r, e);
+                var i = n(t);
+                if (i) return void this.__getImageSrc(i, e);
                 var s = void 0,
                     o = this.__validateAndGetQuerySelector(t);
-                if (o && "object" === ("undefined" == typeof o ? "undefined" : i(o))) {
+                if (o && "object" === ("undefined" == typeof o ? "undefined" : a(o))) {
                     if (o.error) s = o.error;
                     else {
                         var _ = o.tagName.toLowerCase();
@@ -90,28 +86,29 @@
                             s = "For <" + _ + "> element, please use `aframe-html-shader`";
                         }
                     }
-                    if (s) {
-                        var h = u[t],
-                            c = a(s, t);
-                        h && h.callbacks
-                            ? h.callbacks.forEach(function (t) {
-                                  return t(c);
-                              })
-                            : e(c),
-                            (u[t] = c);
-                    }
+                    s &&
+                        !(function () {
+                            var i = u[t],
+                                a = r(s, t);
+                            i && i.callbacks
+                                ? i.callbacks.forEach(function (t) {
+                                      return t(a);
+                                  })
+                                : e(a),
+                                (u[t] = a);
+                        })();
                 }
             },
             __getImageSrc: function (t, e) {
-                function r(e) {
-                    var r = a(e, t);
+                function i(e) {
+                    var i = r(e, t);
                     n.callbacks &&
                         (n.callbacks.forEach(function (t) {
-                            return t(r);
+                            return t(i);
                         }),
-                        (u[t] = r));
+                        (u[t] = i));
                 }
-                var i = this;
+                var a = this;
                 if (t !== this.__textureSrc) {
                     var n = u[t];
                     if (n && n.callbacks) {
@@ -121,53 +118,56 @@
                     var o = new Image();
                     (o.crossOrigin = "Anonymous"),
                         o.addEventListener("load", function (e) {
-                            i.__getUnit8Array(t, function (e) {
+                            a.__getUnit8Array(t, function (e) {
                                 return e
                                     ? void (0, s.parseGIF)(
                                           e,
-                                          function (e, r, a) {
-                                              var i = { status: "success", src: t, times: e, cnt: r, frames: a, timestamp: Date.now() };
+                                          function (e, i, r) {
+                                              var a = { status: "success", src: t, times: e, cnt: i, frames: r, timestamp: Date.now() };
                                               n.callbacks &&
                                                   (n.callbacks.forEach(function (t) {
-                                                      return t(i);
+                                                      return t(a);
                                                   }),
-                                                  (u[t] = i));
+                                                  (u[t] = a));
                                           },
                                           function (t) {
-                                              return r(t);
+                                              return i(t);
                                           }
                                       )
-                                    : void r("This is not gif. Please use `shader:flat` instead");
+                                    : void i("This is not gif. Please use `shader:flat` instead");
                             });
                         }),
                         o.addEventListener("error", function (t) {
-                            return r("Could be the following issue\n - Not Image\n - Not Found\n - Server Error\n - Cross-Origin Issue");
+                            return i("Could be the following issue\n - Not Image\n - Not Found\n - Server Error\n - Cross-Origin Issue");
                         }),
                         (o.src = t);
                 }
             },
             __getUnit8Array: function (t, e) {
                 if ("function" == typeof e) {
-                    var r = new XMLHttpRequest();
-                    r.open("GET", t),
-                        (r.responseType = "arraybuffer"),
-                        r.addEventListener("load", function (t) {
-                            for (var r = new Uint8Array(t.target.response), a = r.subarray(0, 4), i = "", s = 0; s < a.length; s++) i += a[s].toString(16);
-                            "47494638" === i ? e(r) : e();
+                    var i = new XMLHttpRequest();
+                    i.open("GET", t),
+                        (i.responseType = "arraybuffer"),
+                        i.addEventListener("load", function (t) {
+                            for (var i = new Uint8Array(t.target.response), r = i.subarray(0, 4), a = "", s = 0; s < r.length; s++) a += r[s].toString(16);
+                            "47494638" === a ? e(i) : e();
                         }),
-                        r.addEventListener("error", function (t) {
+                        i.addEventListener("error", function (t) {
                             h(t), e();
                         }),
-                        r.send();
+                        i.send();
                 }
             },
             __validateAndGetQuerySelector: function (t) {
                 try {
                     var e = document.querySelector(t);
                     return e ? e : { error: "No element was found matching the selector" };
-                } catch (t) {
+                } catch (i) {
                     return { error: "no valid selector" };
                 }
+            },
+            __addPublicFunctions: function () {
+                this.el.gif = { play: this.play.bind(this), pause: this.pause.bind(this), togglePlayback: this.togglePlayback.bind(this), paused: this.paused.bind(this), nextFrame: this.nextFrame.bind(this) };
             },
             pause: function () {
                 h("pause"), (this.__paused = !0);
@@ -189,27 +189,22 @@
                 this.__ctx.clearRect(0, 0, this.__width, this.__height), (this.__texture.needsUpdate = !0);
             },
             __draw: function () {
-                if (0 != this.__frameIdx) {
-                    var t = this.__frames[this.__frameIdx - 1];
-                    (8 != t.disposalMethod && 9 != t.disposalMethod) || this.__clearCanvas();
-                } else this.__clearCanvas();
-                var e = this.__frames[this.__frameIdx];
-                "undefined" != typeof e && (this.__ctx.drawImage(e, 0, 0, this.__width, this.__height), (this.__texture.needsUpdate = !0));
+                this.__ctx.drawImage(this.__frames[this.__frameIdx], 0, 0, this.__width, this.__height), (this.__texture.needsUpdate = !0);
             },
             __ready: function (t) {
                 var e = t.src,
-                    r = t.times,
-                    a = t.cnt,
-                    i = t.frames;
+                    i = t.times,
+                    r = t.cnt,
+                    a = t.frames;
                 h("__ready"),
                     (this.__textureSrc = e),
-                    (this.__delayTimes = r),
-                    a ? (this.__loopCnt = a) : (this.__infinity = !0),
-                    (this.__frames = i),
-                    (this.__frameCnt = r.length),
+                    (this.__delayTimes = i),
+                    r ? (this.__loopCnt = r) : (this.__infinity = !0),
+                    (this.__frames = a),
+                    (this.__frameCnt = i.length),
                     (this.__startTime = Date.now()),
-                    (this.__width = THREE.Math.floorPowerOfTwo(i[0].width)),
-                    (this.__height = THREE.Math.floorPowerOfTwo(i[0].height)),
+                    (this.__width = THREE.Math.floorPowerOfTwo(a[0].width)),
+                    (this.__height = THREE.Math.floorPowerOfTwo(a[0].height)),
                     (this.__cnv.width = this.__width),
                     (this.__cnv.height = this.__height),
                     this.__draw(),
@@ -232,58 +227,56 @@
     },
     function (t, e) {
         "use strict";
-        e.parseGIF = function (t, e, r) {
-            var a = 0,
-                i = [],
+        e.parseGIF = function (t, e, i) {
+            var r = 0,
+                a = [],
                 s = 0,
                 n = null,
                 o = null,
                 _ = [],
                 h = 0;
             if (71 === t[0] && 73 === t[1] && 70 === t[2] && 56 === t[3] && 57 === t[4] && 97 === t[5]) {
-                a += 13 + +!!(128 & t[10]) * Math.pow(2, (7 & t[10]) + 1) * 3;
-                for (var u = t.subarray(0, a); t[a] && 59 !== t[a]; ) {
-                    var c = a,
-                        l = t[a];
+                r += 13 + +!!(128 & t[10]) * Math.pow(2, (7 & t[10]) + 1) * 3;
+                for (var u = t.subarray(0, r); t[r] && 59 !== t[r]; ) {
+                    var c = r,
+                        l = t[r];
                     if (33 === l) {
-                        var f = t[++a];
-                        if ([1, 254, 249, 255].indexOf(f) === -1) {
-                            r && r("parseGIF: unknown label");
+                        var f = t[++r];
+                        if (-1 === [1, 254, 249, 255].indexOf(f)) {
+                            i && i("parseGIF: unknown label");
                             break;
                         }
-                        for (249 === f && i.push(10 * (t[a + 3] + (t[a + 4] << 8))), 255 === f && (h = t[a + 15] + (t[a + 16] << 8)); t[++a]; ) a += t[a];
-                        249 === f && (n = t.subarray(c, a + 1));
+                        for (249 === f && a.push(10 * (t[r + 3] + (t[r + 4] << 8))), 255 === f && (h = t[r + 15] + (t[r + 16] << 8)); t[++r]; ) r += t[r];
+                        249 === f && (n = t.subarray(c, r + 1));
                     } else {
                         if (44 !== l) {
-                            r && r("parseGIF: unknown blockId");
+                            i && i("parseGIF: unknown blockId");
                             break;
                         }
-                        for (a += 9, a += 1 + +!!(128 & t[a]) * (3 * Math.pow(2, (7 & t[a]) + 1)); t[++a]; ) a += t[a];
-                        var o = t.subarray(c, a + 1),
-                            d = { disposalMethod: n[3], blob: URL.createObjectURL(new Blob([u, n, o])) };
-                        _.push(d);
+                        for (r += 9, r += 1 + +!!(128 & t[r]) * (3 * Math.pow(2, (7 & t[r]) + 1)); t[++r]; ) r += t[r];
+                        var o = t.subarray(c, r + 1);
+                        _.push(URL.createObjectURL(new Blob([u, n, o])));
                     }
-                    a++;
+                    r++;
                 }
-            } else r && r("parseGIF: no GIF89a");
+            } else i && i("parseGIF: no GIF89a");
             if (_.length) {
-                var p = document.createElement("canvas"),
+                var d = document.createElement("canvas"),
                     m = function () {
-                        for (var t = 0; t < _.length; t++) {
-                            var e = new Image();
-                            (e.onload = function (t, r) {
-                                0 === r && ((p.width = e.width), (p.height = e.height)), s++, (_[r] = this), s === _.length && ((s = 0), v(1));
-                            }.bind(e, null, t)),
-                                (e.src = _[t].blob),
-                                (e.disposalMethod = _[t].disposalMethod);
-                        }
+                        _.forEach(function (t, e) {
+                            var i = new Image();
+                            (i.onload = function (t, e) {
+                                0 === e && ((d.width = i.width), (d.height = i.height)), s++, (_[e] = this), s === _.length && ((s = 0), p(1));
+                            }.bind(i, null, e)),
+                                (i.src = t);
+                        });
                     },
-                    v = function t(r) {
-                        var a = new Image();
-                        (a.onload = function (r, a) {
-                            s++, (_[a] = this), s === _.length ? ((p = null), e && e(i, h, _)) : t(++a);
-                        }.bind(a)),
-                            (a.src = p.toDataURL("image/gif"));
+                    p = function g(t) {
+                        var i = new Image();
+                        (i.onload = function (t, i) {
+                            s++, (_[i] = this), s === _.length ? ((d = null), e && e(a, h, _)) : g(++i);
+                        }.bind(i)),
+                            (i.src = d.toDataURL("image/gif"));
                     };
                 m();
             }
