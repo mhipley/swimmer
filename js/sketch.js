@@ -614,7 +614,7 @@ AFRAME.registerComponent('swim-controls', {
 		}
 
 		// gallery mode: reset game if idle for more than 10 seconds
-		if ((time - this.lastKeypress) >= 20000 && this.hasStarted === true) {
+		if ((time - this.lastKeypress) >= 60000 && this.hasStarted === true && this.el.object3D.position.z === 98) {
 			location.reload();
 		}
 		
